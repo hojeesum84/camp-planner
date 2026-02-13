@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danville Summer Camp Planner 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ═══════════════════════════════════════════════════════════
+   DESIGN SYSTEM — Danville Summer Camp Planner
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --primary: #0f766e;
+  --primary-dark: #0d5f59;
+  --primary-light: #14b8a6;
+  --primary-50: #f0fdfa;
+  --primary-100: #ccfbf1;
+  --primary-200: #99f6e4;
+  --accent: #f59e0b;
+  --accent-light: #fef3c7;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --surface-hover: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,.05);
+  --shadow-md: 0 4px 12px rgba(15,23,42,.08);
+  --shadow-lg: 0 8px 30px rgba(15,23,42,.12);
+  --shadow-xl: 0 20px 60px rgba(15,23,42,.15);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --child-0: #3b82f6;
+  --child-0-bg: #eff6ff;
+  --child-0-border: #bfdbfe;
+  --child-1: #ec4899;
+  --child-1-bg: #fdf2f8;
+  --child-1-border: #fbcfe8;
+  --both-color: #10b981;
+  --both-bg: #ecfdf5;
+  --both-border: #a7f3d0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(180deg, #f0fdfa 0%, #f8fafc 40%, #f1f5f9 100%);
+  min-height: 100vh;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Animations ────────────────────────────────────────── */
+.fade-in { animation: fadeIn .5s cubic-bezier(.4,0,.2,1) }
+@keyframes fadeIn { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+@keyframes spin { to { transform:rotate(360deg) } }
+@keyframes shimmer { 0% { background-position: -200% 0 } 100% { background-position: 200% 0 } }
+@keyframes swapPulse { 0% { background: #d8b4fe } 100% { background: inherit } }
+@keyframes slideIn { from { opacity:0; transform:translateY(8px) scale(.98) } to { opacity:1; transform:translateY(0) scale(1) } }
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(15,118,110,.3) } 70% { box-shadow: 0 0 0 8px rgba(15,118,110,0) } 100% { box-shadow: 0 0 0 0 rgba(15,118,110,0) } }
+
+.spinner {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--primary);
+  animation: spin .8s linear infinite;
+}
+
+/* ── Cards ─────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-light);
+  transition: box-shadow .2s, transform .2s;
+}
+.card:hover { box-shadow: var(--shadow-lg) }
+
+/* ── Buttons ───────────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white; padding: 12px 28px; border-radius: var(--radius-sm);
+  font-weight: 600; font-size: 15px; cursor: pointer; border: none;
+  transition: all .25s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 2px 8px rgba(15,118,110,.3);
+  letter-spacing: -.01em;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-dark), #0a4f4a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15,118,110,.35);
+}
+.btn-primary:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(15,118,110,.3) }
+
+.btn-secondary {
+  background: var(--surface); color: var(--primary);
+  border: 2px solid var(--primary-200); padding: 12px 28px;
+  border-radius: var(--radius-sm); font-weight: 600; font-size: 15px;
+  cursor: pointer; transition: all .2s;
+}
+.btn-secondary:hover { background: var(--primary-50); border-color: var(--primary-light) }
+
+/* ── Tags ──────────────────────────────────────────────── */
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 12px; border-radius: 9999px;
+  font-size: 12px; font-weight: 700; margin: 2px;
+  letter-spacing: .02em; text-transform: uppercase;
+}
+.tag-hudson { background: var(--child-0-bg); color: var(--child-0); border: 1px solid var(--child-0-border) }
+.tag-harper { background: var(--child-1-bg); color: var(--child-1); border: 1px solid var(--child-1-border) }
+.tag-both { background: var(--both-bg); color: var(--both-color); border: 1px solid var(--both-border) }
+
+/* ── Form Inputs ───────────────────────────────────────── */
+input[type="text"], input[type="date"], input[type="password"], select, textarea {
+  border: 2px solid var(--border); border-radius: var(--radius-sm);
+  padding: 12px 16px; width: 100%; font-size: 14px;
+  transition: all .2s; background: var(--surface);
+  color: var(--text-primary); font-family: inherit;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(15,118,110,.1);
+}
+
+/* ── Interest Chips ────────────────────────────────────── */
+.interest-chip {
+  padding: 10px 18px; border-radius: var(--radius-md);
+  border: 2px solid var(--border); cursor: pointer;
+  transition: all .25s; font-size: 14px; font-weight: 500;
+  user-select: none; background: var(--surface);
+}
+.interest-chip.selected {
+  border-color: var(--primary); background: var(--primary-50);
+  color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(15,118,110,.1);
+}
+.interest-chip:hover { border-color: var(--primary-light); transform: translateY(-1px) }
+
+/* ── Step Indicator ────────────────────────────────────── */
+.step-dot {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px; transition: all .4s cubic-bezier(.4,0,.2,1);
+  border: 2px solid transparent;
+}
+.step-dot.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white; border-color: var(--primary);
+  box-shadow: 0 2px 12px rgba(15,118,110,.3);
+  animation: pulse-ring 2s infinite;
+}
+.step-dot.completed {
+  background: var(--primary-light); color: white;
+  border-color: var(--primary-light);
+}
+.step-dot.upcoming {
+  background: var(--surface-alt); color: var(--text-muted);
+  border-color: var(--border);
+}
+
+/* ── Scenario Tabs ─────────────────────────────────────── */
+.scenario-tab {
+  padding: 12px 24px; border-bottom: 3px solid transparent;
+  cursor: pointer; font-weight: 600; font-size: 14px;
+  color: var(--text-muted); transition: all .2s; white-space: nowrap;
+}
+.scenario-tab:hover { color: var(--text-secondary) }
+.scenario-tab.active { color: var(--primary); border-bottom-color: var(--primary) }
+
+/* ── Week Header ───────────────────────────────────────── */
+.week-header {
+  background: linear-gradient(135deg, var(--primary), #0d9488);
+  color: white; padding: 14px 20px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  font-weight: 700; font-size: 15px;
+  letter-spacing: -.01em;
+}
+
+/* ── Result Cards ──────────────────────────────────────── */
+.result-card {
+  border-left: 4px solid; padding: 18px 20px;
+  margin: 10px 0; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--surface); position: relative;
+  transition: all .2s;
+}
+.result-hudson { border-color: var(--child-0); background: var(--child-0-bg) }
+.result-harper { border-color: var(--child-1); background: var(--child-1-bg) }
+.result-both { border-color: var(--both-color); background: var(--both-bg) }
+.result-card.clickable { cursor: pointer }
+.result-card.clickable:hover {
+  transform: translateX(6px);
+  box-shadow: var(--shadow-md);
+}
+.result-card.clickable::after {
+  content: 'Click to swap'; position: absolute;
+  right: 14px; bottom: 8px; font-size: 10px;
+  color: var(--text-muted); opacity: 0; transition: opacity .2s;
+  background: white; padding: 2px 8px; border-radius: 4px;
+}
+.result-card.clickable:hover::after { opacity: 1 }
+
+/* ── Swap Modal ────────────────────────────────────────── */
+.swap-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15,23,42,.6); backdrop-filter: blur(4px);
+  z-index: 50; display: flex; align-items: center; justify-content: center;
+  animation: fadeIn .2s ease-in;
+}
+.swap-modal {
+  background: var(--surface); border-radius: var(--radius-xl);
+  max-width: 660px; width: 95%; max-height: 80vh;
+  overflow: hidden; box-shadow: var(--shadow-xl);
+  animation: slideIn .3s cubic-bezier(.4,0,.2,1);
+}
+.swap-modal-body { overflow-y: auto; max-height: calc(80vh - 140px); padding: 0 24px 24px }
+.alt-card {
+  border: 2px solid var(--border); border-radius: var(--radius-md);
+  padding: 16px; margin-bottom: 10px; cursor: pointer; transition: all .2s;
+  background: var(--surface);
+}
+.alt-card:hover {
+  border-color: var(--primary-200); background: var(--primary-50);
+  transform: translateY(-2px); box-shadow: var(--shadow-md);
+}
+.alt-card.same-cat { border-left: 4px solid var(--accent) }
+.alt-card.has-warnings { border-color: #fbbf24 }
+
+/* ── Custom Plan / Swapped ─────────────────────────────── */
+.custom-tab { background: linear-gradient(135deg, #7c3aed, #a855f7); color: white }
+.custom-badge {
+  background: #7c3aed; color: white; font-size: 10px;
+  padding: 2px 8px; border-radius: 9999px; margin-left: 8px; font-weight: 700;
+}
+.swapped { animation: swapPulse .6s ease-out }
+.swapped-indicator {
+  background: linear-gradient(135deg, #7c3aed, #a855f7); color: white;
+  font-size: 9px; padding: 2px 8px; border-radius: 6px; margin-left: 8px;
+  font-weight: 700; letter-spacing: .03em;
+}
+
+/* ── Warning Badges ────────────────────────────────────── */
+.warn-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; padding: 3px 10px; border-radius: var(--radius-sm);
+  font-weight: 600; margin-top: 4px; margin-right: 4px;
+}
+.warn-badge.warn-orange { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d }
+.warn-badge.warn-red { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5 }
+.warn-badge.warn-blue { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd }
+.swap-warning-banner { background: #fffbeb; border: 1px solid #fcd34d; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: #92400e }
+.custom-warning { background: #fffbeb; border: 1px solid #fcd34d; border-radius: var(--radius-sm); padding: 10px 14px; margin: 8px 0; font-size: 12px; color: #92400e }
+
+/* ── Print ─────────────────────────────────────────────── */
+@media print { .no-print { display: none!important } .card { box-shadow: none; border: 1px solid #ddd } }
+
+/* ── Build Your Own ────────────────────────────────────── */
+.build-week-tab {
+  padding: 10px 16px; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  cursor: pointer; font-weight: 600; font-size: 13px;
+  color: var(--text-muted); border: 2px solid transparent;
+  border-bottom: none; transition: all .25s;
+  background: var(--surface-alt); white-space: nowrap;
+}
+.build-week-tab:hover { color: var(--text-secondary); background: var(--surface-hover) }
+.build-week-tab.active {
+  background: var(--surface); color: var(--primary);
+  border-color: var(--border); border-bottom-color: var(--surface);
+  margin-bottom: -2px; z-index: 1;
+}
+.build-week-tab .wcount {
+  background: var(--border); color: var(--text-muted);
+  font-size: 10px; padding: 2px 7px; border-radius: 9999px; margin-left: 5px;
+  font-weight: 700;
+}
+.build-week-tab.active .wcount { background: var(--primary-100); color: var(--primary-dark) }
+
+.build-child-tab {
+  padding: 10px 24px; border-radius: 9999px; cursor: pointer;
+  font-weight: 600; font-size: 14px; transition: all .25s;
+  border: 2px solid var(--border); background: var(--surface);
+}
+.build-child-tab:hover { transform: translateY(-1px) }
+.build-child-tab.sel-0 { background: var(--child-0-bg); color: var(--child-0); border-color: var(--child-0-border); box-shadow: 0 2px 8px rgba(59,130,246,.15) }
+.build-child-tab.sel-1 { background: var(--child-1-bg); color: var(--child-1); border-color: var(--child-1-border); box-shadow: 0 2px 8px rgba(236,72,153,.15) }
+
+.build-card {
+  border: 2px solid var(--border); border-radius: var(--radius-md);
+  padding: 16px; cursor: pointer; transition: all .25s;
+  background: var(--surface); position: relative;
+}
+.build-card:hover {
+  border-color: var(--primary-200); transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.build-card.selected {
+  border-color: var(--primary); background: var(--primary-50);
+  box-shadow: 0 0 0 3px rgba(15,118,110,.1);
+}
+.build-card .int-badge {
+  background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e;
+  font-size: 10px; padding: 3px 10px; border-radius: 9999px; font-weight: 700;
+}
+.build-card .cat-pill {
+  font-size: 10px; padding: 3px 10px; border-radius: 9999px;
+  font-weight: 600; background: var(--surface-alt); color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.build-summary {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg); padding: 14px 24px; margin-bottom: 20px;
+  border: 1px solid var(--border-light);
+}
+.build-warn-panel {
+  background: #fffbeb; border: 1px solid #fcd34d;
+  border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 16px;
+}
+.build-sel-strip {
+  background: var(--primary-50); border: 1px solid var(--primary-200);
+  border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 16px;
+}
+.build-sel-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--surface); border: 1px solid var(--primary-200);
+  border-radius: 9999px; padding: 5px 14px;
+  font-size: 12px; font-weight: 600; color: var(--primary-dark);
+  cursor: pointer; transition: all .2s;
+}
+.build-sel-chip:hover { background: #fee2e2; border-color: #fca5a5; color: #991b1b }
+
+/* ── Variety Slider ────────────────────────────────────── */
+.variety-wrap {
+  background: var(--surface-alt); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 16px 20px; margin-top: 14px;
+}
+.variety-slider {
+  -webkit-appearance: none; height: 6px; border-radius: 3px;
+  background: linear-gradient(to right, var(--border), var(--primary-light));
+  outline: none; width: 100%;
+}
+.variety-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 24px; height: 24px;
+  border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  cursor: pointer; border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(15,118,110,.3);
+  transition: box-shadow .2s;
+}
+.variety-slider::-webkit-slider-thumb:hover { box-shadow: 0 2px 12px rgba(15,118,110,.5) }
+.variety-slider::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  cursor: pointer; border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(15,118,110,.3);
+}
+.variety-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; min-width: 90px }
+.variety-level { font-size: 12px; font-weight: 700; padding: 3px 12px; border-radius: 9999px }
+
+/* ── Hero Section ──────────────────────────────────────── */
+.hero-gradient {
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 40%, #14b8a6 100%);
+  border-radius: var(--radius-xl);
+  padding: 48px 40px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.hero-gradient::before {
+  content: ''; position: absolute; top: -50%; right: -20%;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+}
+.hero-gradient::after {
+  content: ''; position: absolute; bottom: -30%; left: -10%;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: rgba(255,255,255,.04);
+}
+
+/* ── How-it-works Steps ────────────────────────────────── */
+.how-step {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 16px; border-radius: var(--radius-md);
+  background: var(--surface); border: 1px solid var(--border);
+  transition: all .2s;
+}
+.how-step:hover { border-color: var(--primary-200); box-shadow: var(--shadow-sm) }
+.how-step-num {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px;
+  background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
+  color: var(--primary-dark);
+}
+
+/* ── Mode Cards ────────────────────────────────────────── */
+.mode-card {
+  padding: 24px; border-radius: var(--radius-lg);
+  border: 2px solid var(--border); cursor: pointer;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  background: var(--surface); position: relative; overflow: hidden;
+}
+.mode-card:hover { border-color: var(--primary-200); transform: translateY(-2px); box-shadow: var(--shadow-md) }
+.mode-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-50);
+  box-shadow: 0 0 0 3px rgba(15,118,110,.12);
+}
+.mode-card.selected::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+}
+
+/* ── Section Divider ───────────────────────────────────── */
+.section-divider {
+  display: flex; align-items: center; gap: 12px; margin: 24px 0;
+}
+.section-divider::before, .section-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.section-divider span {
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .1em;
+}
+
+/* ── Pill Filters ──────────────────────────────────────── */
+.pill-filter {
+  font-size: 13px; padding: 7px 16px; border-radius: 9999px;
+  font-weight: 600; cursor: pointer; transition: all .2s;
+  border: 1.5px solid var(--border); background: var(--surface);
+  color: var(--text-secondary);
+}
+.pill-filter:hover { border-color: var(--primary-200); background: var(--primary-50) }
+.pill-filter.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white; border-color: transparent;
+  box-shadow: 0 2px 8px rgba(15,118,110,.25);
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero-gradient { padding: 32px 24px }
+  .card { padding: 20px }
+  .build-summary { padding: 12px 16px }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useCallback,useRef}=React;
+
+// ============================================================
+// COMPLETE CAMP DATA - Town of Danville Summer 2026
+// Season: June 15 - July 31 (closed Fri July 3)
+// ============================================================
+const WEEKS=[
+{num:1,label:"Week 1",dates:"Jun 15-19",days:"M-F",full:true},
+{num:2,label:"Week 2",dates:"Jun 22-26",days:"M-F",full:true},
+{num:3,label:"Week 3",dates:"Jun 29-Jul 2",days:"M-Th",full:false},
+{num:4,label:"Week 4",dates:"Jul 6-10",days:"M-F",full:true},
+{num:5,label:"Week 5",dates:"Jul 13-17",days:"M-F",full:true},
+{num:6,label:"Week 6",dates:"Jul 20-24",days:"M-F",full:true},
+{num:7,label:"Week 7",dates:"Jul 27-31",days:"M-F",full:true}
+];
+
+const CAMP_DATA={
+traditionalCamps:[
+{name:"Diablo Vista Camp",ageLabel:"7-11Y",minAge:7,maxAge:11,time:"9:00 AM-1:00 PM",location:"Teen Center at Diablo Vista Middle School",priceR:160,priceN:192,shortWeekR:128,shortWeekN:154,type:"half-day",
+weeks:[{w:1,id:"#38779"},{w:2,id:"#38780"},{w:3,id:"#38781"},{w:4,id:"#38782"},{w:5,id:"#38783"},{w:6,id:"#38784"},{w:7,id:"#38785"}]},
+{name:"Diablo Vista Camp Jr",ageLabel:"5-7Y",minAge:5,maxAge:7,time:"9:00 AM-1:00 PM",location:"Teen Center at Diablo Vista Middle School",priceR:160,priceN:192,shortWeekR:128,shortWeekN:154,type:"half-day",
+weeks:[{w:1,id:"#38772"},{w:2,id:"#38773"},{w:3,id:"#38774"},{w:4,id:"#38775"},{w:5,id:"#38776"},{w:6,id:"#38777"},{w:7,id:"#38778"}]},
+{name:"Charlotte Wood Camp",ageLabel:"7-11Y",minAge:7,maxAge:11,time:"9:00 AM-3:00 PM",location:"Teen Center at Charlotte Wood Middle School",priceR:200,priceN:240,shortWeekR:160,shortWeekN:192,type:"full-day",
+weeks:[{w:1,id:"#38766"},{w:2,id:"#38758"},{w:3,id:"#38767"},{w:4,id:"#38768"},{w:5,id:"#38769"},{w:6,id:"#38770"},{w:7,id:"#38771"}]},
+{name:"Charlotte Wood Camp Jr",ageLabel:"5-7Y",minAge:5,maxAge:7,time:"9:00 AM-3:00 PM",location:"Teen Center at Charlotte Wood Middle School",priceR:200,priceN:240,shortWeekR:160,shortWeekN:192,type:"full-day",
+weeks:[{w:1,id:"#38762"},{w:2,id:"#38759"},{w:3,id:"#38763"},{w:4,id:"#38760"},{w:5,id:"#38761"},{w:6,id:"#38764"},{w:7,id:"#38765"}]},
+{name:"Oak Hill Park Camp",ageLabel:"7-9Y",minAge:7,maxAge:9,time:"9:00 AM-3:30 PM",location:"Meeting Rooms at Oak Hill Park Community Center",priceR:250,priceN:300,shortWeekR:200,shortWeekN:240,type:"full-day",fieldTrips:["Oakland Zoo","Crab Cove","Chabot Space","Rockin' Jump","Urban Air","Discovery Kingdom","Lindsay Wildlife"],
+weeks:[{w:1,id:"#38800"},{w:2,id:"#38801"},{w:3,id:"#38802"},{w:4,id:"#38803"},{w:5,id:"#38804"},{w:6,id:"#38805"},{w:7,id:"#38806"}]},
+{name:"Oak Hill Park Camp Jr",ageLabel:"5-6Y",minAge:5,maxAge:6,time:"9:00 AM-3:30 PM",location:"Meeting Rooms at Oak Hill Park Community Center",priceR:250,priceN:300,shortWeekR:200,shortWeekN:240,type:"full-day",fieldTrips:["Oakland Zoo","Crab Cove","Chabot Space","Rockin' Jump","Urban Air","Discovery Kingdom","Lindsay Wildlife"],
+weeks:[{w:1,id:"#38793"},{w:2,id:"#38794"},{w:3,id:"#38795"},{w:4,id:"#38796"},{w:5,id:"#38797"},{w:6,id:"#38798"},{w:7,id:"#38799"}]},
+{name:"Play 'n' Sports",ageLabel:"9-11Y",minAge:9,maxAge:11,time:"9:00 AM-3:30 PM",location:"Blacktop at Los Cerros Middle School",priceR:250,priceN:300,shortWeekR:200,shortWeekN:240,type:"full-day",sports:[["Basketball","Soccer","Flag Football"],["Floor Hockey","Lacrosse","Tennis"],["Croquet","Volleyball"],["Badminton","Racquetball","Tennis"],["Basketball","Lacrosse","Volleyball"],["Flag Football","Croquet","Hockey"],["Soccer","Tennis","Kickball"]],fieldTrips:["Oakland Zoo","Sky Zone","Lawrence Hall of Science","The Wave","Discovery Kingdom","Hurricane Harbor","Exploratorium"],
+weeks:[{w:1,id:"#38709"},{w:2,id:"#38710"},{w:3,id:"#38711"},{w:4,id:"#38712"},{w:5,id:"#38713"},{w:6,id:"#38714"},{w:7,id:"#38715"}]},
+{name:"Play 'n' Sports Jr",ageLabel:"7-9Y",minAge:7,maxAge:9,time:"9:00 AM-3:30 PM",location:"Blacktop at Los Cerros Middle School",priceR:250,priceN:300,shortWeekR:200,shortWeekN:240,type:"full-day",sports:[["Basketball","Soccer","Flag Football"],["Floor Hockey","Lacrosse","Tennis"],["Croquet","Volleyball"],["Badminton","Racquetball","Tennis"],["Basketball","Lacrosse","Volleyball"],["Flag Football","Croquet","Hockey"],["Soccer","Tennis","Kickball"]],fieldTrips:["Oakland Zoo","Sky Zone","Lawrence Hall of Science","The Wave","Discovery Kingdom","Hurricane Harbor","Exploratorium"],
+weeks:[{w:1,id:"#38702"},{w:2,id:"#38703"},{w:3,id:"#38704"},{w:4,id:"#38705"},{w:5,id:"#38706"},{w:6,id:"#38707"},{w:7,id:"#38708"}]},
+{name:"DesTEENation Junior",ageLabel:"9-11Y",minAge:9,maxAge:11,time:"9:00 AM-3:30 PM",location:"Blacktop at Los Cerros Middle School",priceR:300,priceN:360,shortWeekR:240,shortWeekN:288,type:"full-day",fieldTrips:["Sky Zone/Oakland Zoo","Movies/The Wave","Golden Skate/Aqua Adventure","Subpar Mini Golf/Discovery Kingdom","Dublin Iceland/Hurricane Harbor","Sky Zone/Adventure CAT Sailing","Laser Tag/Exploratorium"],
+weeks:[{w:1,id:"#38688"},{w:2,id:"#38689"},{w:3,id:"#38690"},{w:4,id:"#38691"},{w:5,id:"#38692"},{w:6,id:"#38693"},{w:7,id:"#38694"}]}
+],
+extendedCare:{
+ohp:{name:"Oak Hill Park Extended",amTime:"7:30-9:30 AM",pmTime:"3:00-6:00 PM",amPriceR:30,amPriceN:36,pmPriceR:60,pmPriceN:72,
+weeks:[{w:1,am:"#38816",pm:"#38823"},{w:2,am:"#38817",pm:"#38824"},{w:3,am:"#38818",pm:"#38825"},{w:4,am:"#38819",pm:"#38826"},{w:5,am:"#38820",pm:"#38827"},{w:6,am:"#38821",pm:"#38828"},{w:7,am:"#38822",pm:"#38829"}]},
+pns:{name:"PNS/DesTEENation Extended",amTime:"7:30-9:30 AM",pmTime:"3:00-6:00 PM",amPriceR:30,amPriceN:36,pmPriceR:60,pmPriceN:72,
+weeks:[{w:1,am:"#38716",pm:"#38723"},{w:2,am:"#38717",pm:"#38724"},{w:3,am:"#38718",pm:"#38725"},{w:4,am:"#38719",pm:"#38726"},{w:5,am:"#38720",pm:"#38727"},{w:6,am:"#38721",pm:"#38728"},{w:7,am:"#38722",pm:"#38729"}]}
+},
+enrichmentCamps:[
+// SPORTS
+{name:"Skyhawks Flag Football",cat:"Sports",ageLabel:"6-12Y",minAge:6,maxAge:12,time:"9:00 AM-12:00 PM",location:"Soccer Field 1, Sycamore Valley Park",id:"#39071",week:2,priceR:275,priceN:330,desc:"Half-day flag football camp"},
+{name:"Skyhawks Flag Football (Full Day - Skills+Scrimmages)",cat:"Sports",ageLabel:"6-12Y",minAge:6,maxAge:12,time:"9:00 AM-3:00 PM",location:"Soccer Field 1, Sycamore Valley Park",id:"#39072",week:2,priceR:390,priceN:468,desc:"Full-day flag football with skills training and competitive scrimmages"},
+{name:"Skyhawks Summer Camp Olympics",cat:"Sports",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"9:00 AM-12:00 PM",location:"East Soccer Field, Diablo Vista Park",id:"#39070",week:1,priceR:220,priceN:264,desc:"Multi-sport: flag football, dodgeball, capture the flag, soccer, frisbee, volleyball",days:"M-Th"},
+{name:"Skyhawks Summer Camp Olympics",cat:"Sports",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"9:00 AM-12:00 PM",location:"East Soccer Field, Diablo Vista Park",id:"#39082",week:5,priceR:275,priceN:330,desc:"Multi-sport week"},
+{name:"Skyhawks Summer Camp Olympics",cat:"Sports",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"9:00 AM-12:00 PM",location:"East Soccer Field, Diablo Vista Park",id:"#39084",week:7,priceR:275,priceN:330,desc:"Multi-sport week"},
+{name:"Skyhawks Basketball Camp",cat:"Sports",ageLabel:"6-12Y",minAge:6,maxAge:12,time:"9:00 AM-12:00 PM",location:"Gymnasium, Diablo Vista Middle School",id:"#39075",week:4,priceR:275,priceN:330,desc:"Half-day basketball camp"},
+{name:"Skyhawks Basketball (Full Day - Skills+Scrimmages)",cat:"Sports",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"9:00 AM-3:00 PM",location:"Gymnasium, Diablo Vista Middle School",id:"#39080",week:4,priceR:390,priceN:468,desc:"Full-day basketball with skills and scrimmages"},
+{name:"Skyhawks Volleyball Camp",cat:"Sports",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"9:00 AM-12:00 PM",location:"Gymnasium, Diablo Vista Middle School",id:"#39073",week:3,priceR:220,priceN:264,desc:"Volleyball skills and fun",days:"M-Th"},
+{name:"Skyhawks Mini-Hawk Camp",cat:"Sports",ageLabel:"4-6Y",minAge:4,maxAge:6,time:"9:00 AM-12:00 PM",location:"East Soccer Field, Diablo Vista Park",id:"#39069",week:1,priceR:220,priceN:264,desc:"Multi-sport for littles: baseball, flag football, soccer, track",days:"M-Th"},
+{name:"Skyhawks Mini-Hawk Camp",cat:"Sports",ageLabel:"4-6Y",minAge:4,maxAge:6,time:"9:00 AM-12:00 PM",location:"East Soccer Field, Diablo Vista Park",id:"#39081",week:5,priceR:275,priceN:330,desc:"Multi-sport for ages 4-6"},
+{name:"Skyhawks Mini-Hawk Camp",cat:"Sports",ageLabel:"4-6Y",minAge:4,maxAge:6,time:"9:00 AM-12:00 PM",location:"East Soccer Field, Diablo Vista Park",id:"#39083",week:7,priceR:275,priceN:330,desc:"Multi-sport for ages 4-6"},
+{name:"Skyhawks Beginning Baseball",cat:"Sports",ageLabel:"5-7Y",minAge:5,maxAge:7,time:"9:00 AM-12:00 PM",location:"Ball Diamond 1, Osage Station Park",id:"#39085",week:6,priceR:275,priceN:330,desc:"Baseball fundamentals"},
+{name:"Banana Baseball Camp",cat:"Sports",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"9:00 AM-12:00 PM",location:"Ball Diamond 3, Osage Station Park",id:"#39086",week:6,priceR:275,priceN:330,desc:"Unique baseball camp blending skills with music, dances, and team challenges"},
+{name:"Kidz Love Soccer (9-10Y)",cat:"Sports",ageLabel:"9-10Y",minAge:9,maxAge:10,time:"9:00 AM-12:00 PM",location:"Soccer Field 6, Osage Station Park",id:"#38995",week:5,priceR:267,priceN:320,desc:"Age-specific soccer camp with World Cup tournament"},
+{name:"Kidz Love Soccer (7-8Y)",cat:"Sports",ageLabel:"7-8Y",minAge:7,maxAge:8,time:"9:00 AM-12:00 PM",location:"Soccer Field 6, Osage Station Park",id:"#38994",week:5,priceR:267,priceN:320,desc:"Age-specific soccer camp"},
+{name:"Summer Tennis Camp",cat:"Sports",ageLabel:"7-13Y",minAge:7,maxAge:13,time:"10:00 AM-1:00 PM",location:"Tennis Courts, Monte Vista High School",priceR:350,priceN:420,desc:"R.O.G.Y format tennis with drills, games, footwork, and fun",
+multiWeek:[{w:1,id:"#39030"},{w:2,id:"#39031"},{w:3,id:"#39032"},{w:4,id:"#39033"},{w:5,id:"#39034"},{w:6,id:"#39035"},{w:7,id:"#39036"}]},
+// ART
+{name:"Ms. Debbie's Art Camp: ART-rageous!",cat:"Art",ageLabel:"5.5-10Y",minAge:5,maxAge:10,time:"9:00 AM-12:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#39077",week:1,priceR:280,priceN:336,desc:"Mixed media art exploration with fun themes"},
+{name:"Ms. Debbie's Art Camp: ART-rageous! (PM)",cat:"Art",ageLabel:"5.5-10Y",minAge:5,maxAge:10,time:"1:00 PM-4:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#39939",week:1,priceR:280,priceN:336,desc:"Afternoon session of ART-rageous"},
+{name:"Ms. Debbie's Sparkle Art Adventures",cat:"Art",ageLabel:"5.5-10Y",minAge:5,maxAge:10,time:"9:00 AM-12:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#38814",week:6,priceR:280,priceN:336,desc:"2D and 3D art with sparkles, glitters, fairies, castles, mermaids"},
+{name:"Ms. Debbie's Sparkle Art Adventures (PM)",cat:"Art",ageLabel:"5.5-10Y",minAge:5,maxAge:10,time:"1:00 PM-4:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#38815",week:6,priceR:280,priceN:336,desc:"Afternoon Sparkle Art"},
+{name:"Painting Camp",cat:"Art",ageLabel:"6-10Y",minAge:6,maxAge:10,time:"10:30 AM-12:30 PM",location:"Art Room, Danville Community Center",id:"#39955",week:2,priceR:230,priceN:276,desc:"Create 2 different paintings each day with brushes, sponges, and fun materials"},
+{name:"Painting Camp",cat:"Art",ageLabel:"6-10Y",minAge:6,maxAge:10,time:"10:30 AM-12:30 PM",location:"Art Room, Danville Community Center",id:"#39957",week:7,priceR:230,priceN:276,desc:"Painting camp - 2 paintings per day"},
+{name:"Seeds of Life Clay Art Camp",cat:"Art",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"1:00 PM-3:00 PM",location:"Art Room, Danville Community Center",id:"#39963",week:1,priceR:200,priceN:240,desc:"Clay art celebrating joyful beginnings of life"},
+{name:"Growing Mind Clay Art Camp",cat:"Art",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"1:00 PM-3:00 PM",location:"Art Room, Danville Community Center",id:"#39962",week:4,priceR:200,priceN:240,desc:"Clay art through the lens of school life"},
+{name:"Mark We Make Clay Art Camp",cat:"Art",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"1:00 PM-3:00 PM",location:"Magee House, Hap Magee Ranch Park",id:"#39961",week:7,priceR:200,priceN:240,desc:"Clay art - sculpt future selves and dream careers"},
+{name:"Art Camp with Miss Tess: Sewing",cat:"Art",ageLabel:"6-11Y",minAge:6,maxAge:11,time:"1:30 PM-4:30 PM",location:"Mt. Diablo Room, Danville Library",id:"#39975",week:1,priceR:428,priceN:514,desc:"Learn hand sewing to create pillows and bags"},
+{name:"Art Camp with Miss Tess: Sewing",cat:"Art",ageLabel:"6-11Y",minAge:6,maxAge:11,time:"1:30 PM-4:30 PM",location:"Mt. Diablo Room, Danville Library",id:"#39976",week:4,priceR:428,priceN:514,desc:"Sewing camp - create usable items"},
+{name:"Sewing Camp (Spanish Academy)",cat:"Art",ageLabel:"6-9.5Y",minAge:6,maxAge:9,time:"9:00 AM-12:00 PM",location:"Las Trampas Room, Danville Community Center",id:"#39023",week:7,priceR:380,priceN:456,desc:"Thread, needle, patterns - make a rag doll and clothes"},
+// TECH/ENTREPRENEURSHIP
+{name:"Roblox Game Design",cat:"Tech",ageLabel:"10-15Y",minAge:10,maxAge:15,time:"9:00 AM-3:00 PM",location:"Lounge, Danville Community Center",id:"#39078",week:6,priceR:615,priceN:738,desc:"Transform Roblox gameplay into a coding experience. Master loops, rendering, and inventory systems."},
+{name:"Web Wizards: Build Your Website",cat:"Tech",ageLabel:"10-14Y",minAge:10,maxAge:14,time:"9:00 AM-3:00 PM",location:"Lounge, Danville Community Center",id:"#39076",week:2,priceR:615,priceN:738,desc:"Learn HTML, CSS, JavaScript to build multi-page websites"},
+{name:"Entrepreneurship & Board Game Design",cat:"Tech",ageLabel:"7-13Y",minAge:7,maxAge:13,time:"9:00 AM-12:00 PM",location:"Swain House, Hap Magee Ranch Park",id:"#39139",week:5,priceR:334,priceN:400,desc:"Bring a business idea to life and pitch it Shark Tank style. Design your own board game."},
+{name:"TED Talks: Speaking & Presenting",cat:"Tech",ageLabel:"9-14Y",minAge:9,maxAge:14,time:"1:00 PM-4:00 PM",location:"Lounge, Danville Community Center",id:"#39006",week:5,priceR:325,priceN:390,desc:"Research, write and present your own TED-style Talk"},
+{name:"Learn Coding LEGO Spike Prime (7-9Y)",cat:"Tech",ageLabel:"7-9Y",minAge:7,maxAge:9,time:"9:00 AM-12:00 PM",location:"Las Trampas Room, Danville Community Center",id:"#39391",week:4,priceR:300,priceN:360,desc:"Build and program robots using LEGO Spike Prime system"},
+{name:"Explore Coding LEGO Spike Prime (9-13Y)",cat:"Tech",ageLabel:"9-13Y",minAge:9,maxAge:13,time:"1:00 PM-4:00 PM",location:"Las Trampas Room, Danville Community Center",id:"#39390",week:4,priceR:300,priceN:360,desc:"Advanced LEGO Spike Prime robotics and coding challenges"},
+{name:"Life Skills Combo Camp",cat:"Tech",ageLabel:"6-12Y",minAge:6,maxAge:12,time:"9:00 AM-12:00 PM",location:"Las Trampas, Danville Community Center",id:"#39102",week:1,priceR:325,priceN:390,desc:"Public speaking, writing, presenting, nutrition, hygiene, and a playful medical track"},
+// STEM/SCIENCE
+{name:"Slimetopia 1-4: Ultimate Slime Adventure",cat:"STEM",ageLabel:"5-12Y",minAge:5,maxAge:12,time:"9:00 AM-12:00 PM",location:"Ballroom, Oak Hill Park Community Center",id:"#39011",week:4,priceR:390,priceN:468,desc:"STEAM slime adventures - build theme parks, cook slime recipes, explore storybook worlds"},
+{name:"Slimetopia 5: Diners, Drive-Thrus and Dives",cat:"STEM",ageLabel:"5-12Y",minAge:5,maxAge:12,time:"9:00 AM-12:00 PM",location:"Ballroom, Oak Hill Park Community Center",id:"#39012",week:7,priceR:390,priceN:468,desc:"Culinary road trip slime - burgers, Tex-Mex, peach cobbler slime"},
+{name:"STEAMwarts Academy",cat:"STEM",ageLabel:"5-12Y",minAge:5,maxAge:12,time:"1:00 PM-4:00 PM",location:"Ballroom, Oak Hill Park Community Center",id:"#39014",week:4,priceR:375,priceN:450,desc:"Harry Potter themed STEAM - design wands, attend wizarding classes, create spells with science"},
+{name:"LEGO Galactic Builders: StarBots",cat:"STEM",ageLabel:"5-8Y",minAge:5,maxAge:8,time:"9:00 AM-12:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#39050",week:5,priceR:280,priceN:336,desc:"Design and program space-themed LEGO robots"},
+{name:"LEGO StarBots & Fizz Build Thrill Full Day",cat:"STEM",ageLabel:"5-8Y",minAge:5,maxAge:8,time:"9:00 AM-4:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#39046",week:5,priceR:530,priceN:636,desc:"Full day: LEGO StarBots + Chemical Engineering"},
+{name:"Fizz, Build, and Thrill: Chemical Engineering",cat:"STEM",ageLabel:"5-8Y",minAge:5,maxAge:8,time:"1:00 PM-4:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#39045",week:5,priceR:280,priceN:336,desc:"Chemical engineering experiments and creative challenges"},
+{name:"Science Beginnings: Edible Science",cat:"STEM",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"9:00 AM-12:00 PM",location:"Ballroom, Oak Hill Park Community Center",id:"#39019",week:5,priceR:315,priceN:378,desc:"Food chemistry - make ice cream, root beer, lemonade sorbets, chocolates"},
+{name:"STEAM Station: Intro to All Things Engineering",cat:"STEM",ageLabel:"5-8Y",minAge:5,maxAge:8,time:"9:00 AM-12:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#39049",week:7,priceR:280,priceN:336,desc:"Bridges to rockets - mechanical, electrical, civil, aerospace engineering"},
+{name:"Turbo Bricks: LEGO Robotics",cat:"STEM",ageLabel:"5-8Y",minAge:5,maxAge:8,time:"1:00 PM-4:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#39047",week:7,priceR:280,priceN:336,desc:"Build and code LEGO robotic vehicles"},
+{name:"Intro Eng & Turbo Bricks Full Day",cat:"STEM",ageLabel:"5-8Y",minAge:5,maxAge:8,time:"9:00 AM-4:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#39048",week:7,priceR:530,priceN:636,desc:"Full day: Engineering + LEGO Robotics combo"},
+{name:"Jurassic Island Camp",cat:"STEM",ageLabel:"5-12Y",minAge:5,maxAge:12,time:"1:00 PM-4:00 PM",location:"Ballroom, Oak Hill Park Community Center",id:"#39013",week:7,priceR:375,priceN:450,desc:"Dig for fossils, meet dinosaurs, explore ancient ecosystems"},
+{name:"Chess Wizards Summer Camp",cat:"STEM",ageLabel:"5-12Y",minAge:5,maxAge:12,time:"9:00 AM-3:00 PM",location:"Cottage, Hap Magee Ranch Park",id:"#38757",week:4,priceR:509,priceN:611,desc:"Full day chess - lessons, tournaments, variation games"},
+{name:"Black Dragon Chess Camp",cat:"STEM",ageLabel:"6-12Y",minAge:6,maxAge:12,time:"9:00 AM-12:00 PM",location:"Las Trampas Room, Danville Community Center",id:"#39037",week:2,priceR:249,priceN:299,desc:"Chess for all levels with emphasis on sportsmanship"},
+{name:"Black Dragon Chess Camp",cat:"STEM",ageLabel:"6-12Y",minAge:6,maxAge:12,time:"9:00 AM-12:00 PM",location:"Mt. Diablo Room, Danville Library",id:"#39038",week:6,priceR:249,priceN:299,desc:"Chess camp at the library"},
+{name:"STEM + Minecraft LEGO Full Day",cat:"STEM",ageLabel:"5-9Y",minAge:5,maxAge:9,time:"9:00 AM-4:00 PM",location:"Las Trampas Room, Danville Community Center",id:"#39392",week:6,priceR:534,priceN:640,desc:"Physics and engineering + Minecraft LEGO adventure"},
+// PERFORMING ARTS
+{name:"KAOS Camp Kids Acting On Stage",cat:"Performing",ageLabel:"8-14Y",minAge:8,maxAge:14,time:"9:00 AM-3:30 PM",location:"Swain House, Hap Magee Ranch Park",id:"#38580",week:1,priceR:600,priceN:720,desc:"2-WEEK camp (Wk1+2): Stage a play AND film a mini-movie! Performance at Village Theatre.",multiWeekSpan:"Weeks 1-2"},
+{name:"KAOS Camp Kids Acting On Stage",cat:"Performing",ageLabel:"8-14Y",minAge:8,maxAge:14,time:"9:00 AM-3:30 PM",location:"Swain House, Hap Magee Ranch Park",id:"#38581",week:4,priceR:600,priceN:720,desc:"2-WEEK camp (Wk4+5): Stage a play AND film a mini-movie!",multiWeekSpan:"Weeks 4-5"},
+{name:"Broadway Stars Musical Theatre",cat:"Performing",ageLabel:"7-13Y",minAge:7,maxAge:13,time:"9:00 AM-1:00 PM",location:"Gymnasium, Diablo Vista Middle School",id:"#39535",week:5,priceR:375,priceN:450,desc:"Sing, act, and dance in scenes from a popular show with a final performance"},
+{name:"Cheer & Hip Hop Camp",cat:"Performing",ageLabel:"7-12Y",minAge:7,maxAge:12,time:"1:00 PM-3:45 PM",location:"Gymnasium, Diablo Vista Middle School",id:"#39041",week:1,priceR:350,priceN:420,desc:"Learn cheer basics and hip-hop moves with a final performance"},
+{name:"K-Pop Demon Hunters Dance (5-9Y)",cat:"Performing",ageLabel:"5-9Y",minAge:5,maxAge:9,time:"1:00 PM-3:45 PM",location:"Gymnasium, Diablo Vista Middle School",id:"#39425",week:5,priceR:350,priceN:420,desc:"K-Pop dance camp with demon hunter theme"},
+{name:"K-Pop Demon Hunters Dance (5-9Y)",cat:"Performing",ageLabel:"5-9Y",minAge:5,maxAge:9,time:"1:00 PM-3:45 PM",location:"Gymnasium, Diablo Vista Middle School",id:"#39427",week:6,priceR:350,priceN:420,desc:"K-Pop dance camp week 6"},
+{name:"Hamilton Musical Camp",cat:"Performing",ageLabel:"8-14Y",minAge:8,maxAge:14,time:"9:00 AM-12:00 PM",location:"Village Theatre",id:"#39984",week:1,priceR:280,priceN:336,desc:"Bring Hamilton to life through songs, rhymes, and creative self-expression"},
+{name:"K-Pop Demon Hunters Musical Camp",cat:"Performing",ageLabel:"8-14Y",minAge:8,maxAge:14,time:"9:00 AM-12:00 PM",location:"Village Theatre",id:"#39986",week:6,priceR:280,priceN:336,desc:"Musical theatre K-Pop workshop with choreography"},
+{name:"Comic Book Creations Camp",cat:"Performing",ageLabel:"8-12Y",minAge:8,maxAge:12,time:"1:00 PM-4:00 PM",location:"Swain House, Hap Magee Ranch Park",id:"#39983",week:5,priceR:280,priceN:336,desc:"Create your own comic book from start to finish"},
+// FILM
+{name:"Action Movie Flix",cat:"Film",ageLabel:"7-13Y",minAge:7,maxAge:13,time:"9:00 AM-12:00 PM",location:"Swain House, Hap Magee Ranch Park",id:"#39061",week:6,priceR:375,priceN:440,desc:"Green screen action movie - captain a spaceship, climb mountains"},
+{name:"Pokemon Stop Motion Flix",cat:"Film",ageLabel:"7-13Y",minAge:7,maxAge:13,time:"1:00 PM-4:00 PM",location:"Swain House, Hap Magee Ranch Park",id:"#39064",week:6,priceR:375,priceN:450,desc:"Create stop-motion Pokemon movie with epic battles"},
+{name:"Action Movie & Pokemon Full Day",cat:"Film",ageLabel:"7-13Y",minAge:7,maxAge:13,time:"9:00 AM-4:00 PM",location:"Swain House, Hap Magee Ranch Park",id:"#39062",week:6,priceR:734,priceN:880,desc:"Full day film combo with free lunch supervision"},
+// COOKING
+{name:"Cooking Fiesta Savory Dishes",cat:"Cooking",ageLabel:"5.5-10.5Y",minAge:5,maxAge:10,time:"9:00 AM-12:00 PM",location:"Ballroom, Oak Hill Park Community Center",id:"#39020",week:1,priceR:380,priceN:456,desc:"Learn the history of Latin dishes and cook delicious recipes"},
+{name:"Cooking Italian Camp",cat:"Cooking",ageLabel:"6-9.5Y",minAge:6,maxAge:9,time:"1:00 PM-4:00 PM",location:"Ballroom, Oak Hill Park Community Center",id:"#39022",week:5,priceR:380,priceN:391,desc:"Cook spaghetti, meatballs, gnocchi, desserts and make a cookbook"},
+{name:"Spanish Cooking & Latin Dance",cat:"Cooking",ageLabel:"6-9.5Y",minAge:6,maxAge:9,time:"9:00 AM-3:00 PM",location:"Ballroom, Oak Hill Park Community Center",id:"#39021",week:2,priceR:380,priceN:456,desc:"Full day: Cook, learn Spanish phrases, and folkloric dance"}
+],
+swimLessons:{
+level1:{name:"Group Swim Level 1",ageLabel:"6-12Y",minAge:6,maxAge:12,priceR:46,priceN:55,duration:"30 min",days:"M-Th",desc:"Beginner - traveling 5 feet, bobbing 3 times, treading 15 seconds",
+monteVista:[
+{time:"10:40 AM",ids:["#38857","#39140","#39141","#39142","#39143","#39144","#39145"]},
+{time:"1:20 PM",ids:["#38871","#39569","#39570","#39571","#39572","#39573","#39574"]},
+{time:"5:00 PM",ids:["#38872","#39701","#39702","#39703","#39704","#39705","#39706"]}],
+sanRamon:[
+{time:"9:40 AM",ids:["#38922","#39322","#39323","#39324","#39325","#39326","#39327"]},
+{time:"12:20 PM",ids:["#39017","#39458","#39459","#39460","#39461","#39462","#39463"]}]},
+level2:{name:"Group Swim Level 2",ageLabel:"4-12Y",minAge:4,maxAge:12,priceR:46,priceN:55,duration:"30 min",days:"M-Th",desc:"Freestyle, backstroke, breaststroke for 15 feet",
+monteVista:[
+{time:"10:00 AM",ids:["#38838","#39096","#39097","#39098","#39099","#39100","#39101"]},
+{time:"10:40 AM",ids:["#38839","#39146","#39147","#39148","#39149","#39150","#39151"]}],
+sanRamon:[
+{time:"9:00 AM",ids:["#38924","#39231","#39239","#39242","#39244","#39245","#39246"]}]},
+waveRiders:{name:"Wave Riders Swim Camp",ageLabel:"9-12Y",minAge:9,maxAge:12,priceR:76,priceN:92,desc:"Swim instruction, water sports, conditioning, stroke technique",
+monteVista:[{time:"3:30 PM",ids:["#38911","#39635","#39636","#39637","#39638","#39639","#39640"]}],
+sanRamon:[{time:"9:30 AM",ids:["#38955","#39316","#39317","#39318","#39319","#39320","#39321"]}]}
+}
+};
+
+const INTEREST_OPTIONS=[
+{id:"sports",label:"Sports & Athletics",icon:"\u26BD",examples:"Flag football, basketball, soccer, tennis, volleyball, baseball"},
+{id:"art",label:"Art & Craft",icon:"\uD83C\uDFA8",examples:"Painting, clay, drawing, mixed media, sewing"},
+{id:"tech",label:"Tech & Coding",icon:"\uD83D\uDCBB",examples:"Roblox, web design, LEGO robotics, coding"},
+{id:"stem",label:"STEM & Science",icon:"\uD83D\uDD2C",examples:"Slime, chemistry, engineering, chess, Minecraft"},
+{id:"performing",label:"Performing Arts",icon:"\uD83C\uDFAD",examples:"Drama, musical theatre, dance, K-Pop, cheer"},
+{id:"film",label:"Film & Video",icon:"\uD83C\uDFAC",examples:"Action movies, stop-motion, green screen"},
+{id:"cooking",label:"Cooking",icon:"\uD83C\uDF73",examples:"Italian, Latin, Spanish cooking & dance"},
+{id:"entrepreneurship",label:"Entrepreneurship",icon:"\uD83D\uDCA1",examples:"Business ideas, Shark Tank pitching, board game design"},
+{id:"swimming",label:"Swimming",icon:"\uD83C\uDFCA",examples:"Swim lessons, Wave Riders water sports camp"}
+];
+
+const BUDGET_OPTIONS=[
+{id:"all-out",label:"Go All Out",desc:"Fill every day with the best options regardless of cost (~$600-900/child/week)"},
+{id:"moderate",label:"Moderate",desc:"Traditional camp + 1-2 enrichments per week (~$300-500/child/week)"},
+{id:"budget",label:"Budget-Friendly",desc:"Focus on traditional camps, fewer specialty add-ons (~$160-300/child/week)"}
+];
+
+function calcAge(dob,date){const d=new Date(date),b=new Date(dob);let a=d.getFullYear()-b.getFullYear();const m=d.getMonth()-b.getMonth();if(m<0||(m===0&&d.getDate()<b.getDate()))a--;return a;}
+
+// ============================================================
+// COMPONENTS
+// ============================================================
+
+function StepIndicator({current,steps}){
+return(<div className="flex items-center justify-center mb-10">
+{steps.map((s,i)=>(<React.Fragment key={i}>
+{i>0&&<div style={{height:2,width:48,margin:'0 4px',borderRadius:1,background:i<=current?'var(--primary-light)':'var(--border)',transition:'background .4s'}}/>}
+<div className="flex flex-col items-center" style={{gap:6}}>
+<div className={`step-dot ${i<current?'completed':i===current?'active':'upcoming'}`}>
+{i<current?'\u2713':i+1}</div>
+<span className="text-xs font-bold" style={{color:i<=current?'var(--primary-dark)':'var(--text-muted)',letterSpacing:'.02em'}}>{s}</span>
+</div></React.Fragment>))}
+</div>);
+}
+
+function WelcomeStep({apiKey,setApiKey,mode,setMode,onNext}){
+const canProceed=mode==='rules'||mode==='build'||(mode==='ai'&&apiKey.startsWith('sk-ant-'));
+return(<div className="fade-in max-w-2xl mx-auto">
+<div className="hero-gradient text-center mb-8" style={{position:'relative',zIndex:0}}>
+<div style={{position:'relative',zIndex:1}}>
+<div className="text-5xl mb-3" style={{filter:'drop-shadow(0 2px 4px rgba(0,0,0,.2))'}}>{"\uD83C\uDFD5\uFE0F"}</div>
+<h1 className="text-3xl font-black mb-2" style={{letterSpacing:'-.03em'}}>Danville Summer Camp Planner</h1>
+<p className="text-lg" style={{opacity:.85}}>Town of Danville &bull; Summer 2026</p>
+<p className="text-sm mt-2" style={{opacity:.65}}>June 15 &ndash; July 31 &bull; 7 Weeks of Adventure</p>
+</div>
+</div>
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+<div className="how-step"><div className="how-step-num">1</div><div><p className="font-bold text-sm" style={{color:'var(--text-primary)'}}>Add your kids</p><p className="text-xs" style={{color:'var(--text-muted)'}}>Names, birthdates &mdash; we auto-calculate camp ages</p></div></div>
+<div className="how-step"><div className="how-step-num">2</div><div><p className="font-bold text-sm" style={{color:'var(--text-primary)'}}>Set interests</p><p className="text-xs" style={{color:'var(--text-muted)'}}>Sports, art, STEM, performing arts &amp; more</p></div></div>
+<div className="how-step"><div className="how-step-num">3</div><div><p className="font-bold text-sm" style={{color:'var(--text-primary)'}}>Get your plan</p><p className="text-xs" style={{color:'var(--text-muted)'}}>Personalized scenarios with swap flexibility</p></div></div>
+</div>
+
+<div className="section-divider"><span>Choose your mode</span></div>
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+<div className={`mode-card ${mode==='rules'?'selected':''}`} onClick={()=>setMode('rules')}>
+<div className="flex items-center gap-3 mb-3">
+<div style={{width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,#ccfbf1,#99f6e4)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22}}>{"\u2699\uFE0F"}</div>
+<div><div className="font-bold text-sm" style={{color:'var(--text-primary)'}}>Smart Recommendations</div>
+<div className="text-xs" style={{color:'var(--text-muted)'}}>Instant &bull; Multiple scenarios</div></div>
+</div>
+<p className="text-xs" style={{color:'var(--text-secondary)',lineHeight:'1.6'}}>Our rule engine filters 70+ camps by age, matches interests, avoids schedule conflicts, and optimizes sibling co-location. Get 3 ready-made scenarios instantly.</p>
+</div>
+<div className={`mode-card ${mode==='build'?'selected':''}`} onClick={()=>setMode('build')}>
+<div className="flex items-center gap-3 mb-3">
+<div style={{width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,#dbeafe,#bfdbfe)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22}}>{"\uD83D\uDEE0\uFE0F"}</div>
+<div><div className="font-bold text-sm" style={{color:'var(--text-primary)'}}>Build Your Own</div>
+<div className="text-xs" style={{color:'var(--text-muted)'}}>Full control &bull; Week by week</div></div>
+</div>
+<p className="text-xs" style={{color:'var(--text-secondary)',lineHeight:'1.6'}}>Hand-pick every class yourself. Browse all eligible activities with interest matching, time conflict detection, and sibling distance warnings built in.</p>
+</div>
+</div>
+
+<button onClick={onNext} disabled={!canProceed} className={`btn-primary w-full ${!canProceed?'opacity-50 cursor-not-allowed':''}`} style={{padding:'14px 28px',fontSize:16}}>
+Get Started &rarr;</button>
+<p className="text-center text-xs mt-6" style={{color:'var(--text-muted)'}}>Based on the Town of Danville Spring 2026 Activity Guide &bull; Register at danville.ca.gov/recguide</p>
+</div>);
+}
+
+function ChildrenStep({children,setChildren,onNext,onBack}){
+const addChild=()=>{if(children.length<4)setChildren([...children,{name:'',dob:'',gender:''}]);};
+const removeChild=(i)=>{setChildren(children.filter((_,idx)=>idx!==i));};
+const updateChild=(i,field,val)=>{const c=[...children];c[i]={...c[i],[field]:val};setChildren(c);};
+const valid=children.length>0&&children.every(c=>c.name&&c.dob);
+const childColors=['var(--child-0)','var(--child-1)','#8b5cf6','#f97316'];
+const childBgs=['var(--child-0-bg)','var(--child-1-bg)','#f5f3ff','#fff7ed'];
+return(<div className="fade-in max-w-2xl mx-auto">
+<div className="text-center mb-8">
+<h2 className="text-2xl font-black mb-2" style={{color:'var(--text-primary)',letterSpacing:'-.02em'}}>Tell us about your kids</h2>
+<p style={{color:'var(--text-muted)',fontSize:14}}>We'll calculate their summer ages and find age-appropriate camps</p>
+</div>
+{children.map((c,i)=>{
+const summerAge=c.dob?calcAge(c.dob,'2026-06-15'):null;
+const midAge=c.dob?calcAge(c.dob,'2026-07-15'):null;
+const bday=c.dob?new Date(c.dob+'T00:00:00'):null;
+const hasSummerBday=bday&&bday.getMonth()>=5&&bday.getMonth()<=6&&bday.getDate()>=15;
+return(<div key={i} className="card" style={{borderTop:`3px solid ${childColors[i]||childColors[0]}`,animation:`slideIn .4s cubic-bezier(.4,0,.2,1) ${i*0.1}s both`}}>
+<div className="flex justify-between items-center mb-4">
+<div className="flex items-center gap-3">
+<div style={{width:36,height:36,borderRadius:'50%',background:childBgs[i]||childBgs[0],display:'flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize:14,color:childColors[i]||childColors[0]}}>{i+1}</div>
+<h3 className="font-bold" style={{color:'var(--text-primary)',fontSize:16}}>Child {i+1}{c.name?' — '+c.name:''}</h3>
+</div>
+{children.length>1&&<button onClick={()=>removeChild(i)} className="text-sm font-medium" style={{color:'#ef4444',opacity:.7,transition:'opacity .2s'}} onMouseOver={e=>e.target.style.opacity=1} onMouseOut={e=>e.target.style.opacity=.7}>Remove</button>}
+</div>
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div><label className="block text-xs font-bold mb-2" style={{color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.05em'}}>Name</label>
+<input type="text" value={c.name} onChange={e=>updateChild(i,'name',e.target.value)} placeholder="e.g. Hudson"/></div>
+<div><label className="block text-xs font-bold mb-2" style={{color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.05em'}}>Date of Birth</label>
+<input type="date" value={c.dob} onChange={e=>updateChild(i,'dob',e.target.value)} min="2011-01-01" max="2022-12-31"/></div>
+<div><label className="block text-xs font-bold mb-2" style={{color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.05em'}}>Gender (optional)</label>
+<select value={c.gender} onChange={e=>updateChild(i,'gender',e.target.value)}>
+<option value="">--</option><option value="boy">Boy</option><option value="girl">Girl</option></select></div>
+</div>
+{summerAge!==null&&<div className="mt-4" style={{padding:'14px 18px',background:childBgs[i]||childBgs[0],borderRadius:'var(--radius-md)',border:`1px solid ${childColors[i]||childColors[0]}22`}}>
+<div className="flex items-center gap-2">
+<span style={{fontSize:20}}>{"\uD83C\uDF1E"}</span>
+<span className="text-sm"><span className="font-bold" style={{color:childColors[i]||childColors[0]}}>{c.name||'This child'}</span> will be <span className="font-black" style={{color:'var(--text-primary)',fontSize:16}}>{summerAge}</span> when camp starts
+{hasSummerBday&&<span style={{color:'#f59e0b',fontWeight:600}}> &bull; Turns {midAge} mid-summer!</span>}</span>
+</div>
+</div>}
+</div>);})}
+{children.length<4&&<button onClick={addChild} className="btn-secondary w-full mb-6" style={{borderStyle:'dashed'}}>+ Add Another Child</button>}
+<div className="flex gap-3">
+<button onClick={onBack} className="btn-secondary flex-1">&larr; Back</button>
+<button onClick={onNext} disabled={!valid} className={`btn-primary flex-1 ${!valid?'opacity-50 cursor-not-allowed':''}`}>Next: Interests &rarr;</button>
+</div>
+</div>);
+}
+
+function PreferencesStep({children,preferences,setPreferences,onNext,onBack}){
+const toggleInterest=(childIdx,interestId)=>{
+const p={...preferences};
+if(!p.childInterests)p.childInterests={};
+if(!p.childInterests[childIdx])p.childInterests[childIdx]=[];
+const arr=p.childInterests[childIdx];
+if(arr.includes(interestId))p.childInterests[childIdx]=arr.filter(x=>x!==interestId);
+else p.childInterests[childIdx]=[...arr,interestId];
+setPreferences(p);
+};
+const setBudget=(b)=>setPreferences({...preferences,budget:b});
+const setCoverage=(c)=>setPreferences({...preferences,coverage:c});
+const setWeeks=(w)=>setPreferences({...preferences,weeks:w});
+const setNotes=(n)=>setPreferences({...preferences,notes:n});
+const setSamecamp=(s)=>setPreferences({...preferences,sameCamp:s});
+const hasInterests=children.every((_,i)=>(preferences.childInterests||{})[i]&&preferences.childInterests[i].length>0);
+const childColors=['var(--child-0)','var(--child-1)','#8b5cf6','#f97316'];
+const childBorders=['var(--child-0-border)','var(--child-1-border)','#c4b5fd','#fed7aa'];
+return(<div className="fade-in max-w-3xl mx-auto">
+<div className="text-center mb-8">
+<h2 className="text-2xl font-black mb-2" style={{color:'var(--text-primary)',letterSpacing:'-.02em'}}>Interests & Preferences</h2>
+<p style={{color:'var(--text-muted)',fontSize:14}}>Select interests for each child, then set your family's camp preferences</p>
+</div>
+{children.map((c,i)=>(<div key={i} className="card" style={{borderTop:`3px solid ${childColors[i]||childColors[0]}`}}>
+<div className="flex items-center gap-3 mb-4">
+<div style={{width:32,height:32,borderRadius:'50%',background:childColors[i]||childColors[0],display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontWeight:800,fontSize:12}}>{c.name?c.name[0].toUpperCase():(i+1)}</div>
+<div><h3 className="font-bold" style={{color:'var(--text-primary)',fontSize:15}}>{c.name}'s Interests</h3>
+<p className="text-xs" style={{color:'var(--text-muted)'}}>Select all that apply</p></div>
+</div>
+<div className="flex flex-wrap gap-2">
+{INTEREST_OPTIONS.map(opt=>(<div key={opt.id}
+className={`interest-chip ${((preferences.childInterests||{})[i]||[]).includes(opt.id)?'selected':''}`}
+onClick={()=>toggleInterest(i,opt.id)}>
+<span className="mr-1">{opt.icon}</span> {opt.label}
+<div className="text-xs mt-0.5" style={{color:'var(--text-muted)'}}>{opt.examples}</div>
+</div>))}
+</div>
+</div>))}
+
+<div className="section-divider"><span>Family Preferences</span></div>
+
+<div className="card">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label className="block text-xs font-bold mb-3" style={{color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.05em'}}>Budget Level</label>
+{BUDGET_OPTIONS.map(b=>(<label key={b.id} className={`block p-4 rounded-xl mb-2 cursor-pointer transition-all border-2 ${preferences.budget===b.id?'border-current bg-opacity-50':'hover:border-gray-300'}`} style={preferences.budget===b.id?{borderColor:'var(--primary)',background:'var(--primary-50)'}:{borderColor:'var(--border)'}}>
+<input type="radio" name="budget" className="hidden" checked={preferences.budget===b.id} onChange={()=>setBudget(b.id)}/>
+<span className="font-bold text-sm" style={{color:'var(--text-primary)'}}>{b.label}</span>
+<p className="text-xs mt-1" style={{color:'var(--text-muted)'}}>{b.desc}</p>
+</label>))}
+</div>
+<div>
+<label className="block text-xs font-bold mb-3" style={{color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.05em'}}>Daily Coverage</label>
+{[{id:'full',label:'Full Day (9AM-3:30PM+)',desc:'Need coverage for most of the workday'},
+{id:'flexible',label:'Flexible',desc:'OK with half-day camps + enrichment mix'},
+{id:'mornings',label:'Mornings Only',desc:'Half-day camps are fine'}].map(c=>(<label key={c.id} className={`block p-4 rounded-xl mb-2 cursor-pointer transition-all border-2`} style={preferences.coverage===c.id?{borderColor:'var(--primary)',background:'var(--primary-50)'}:{borderColor:'var(--border)'}}>
+<input type="radio" name="coverage" className="hidden" checked={preferences.coverage===c.id} onChange={()=>setCoverage(c.id)}/>
+<span className="font-bold text-sm" style={{color:'var(--text-primary)'}}>{c.label}</span>
+<p className="text-xs mt-1" style={{color:'var(--text-muted)'}}>{c.desc}</p>
+</label>))}
+</div>
+</div>
+<div className="mt-6">
+<label className="block text-xs font-bold mb-3" style={{color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.05em'}}>Weeks to Cover</label>
+<div className="flex flex-wrap gap-2">
+{WEEKS.map(w=>(<div key={w.num} onClick={()=>{const cur=preferences.weeks||[1,2,3,4,5,6,7];setWeeks(cur.includes(w.num)?cur.filter(x=>x!==w.num):[...cur,w.num]);}}
+className={`interest-chip text-center ${(preferences.weeks||[1,2,3,4,5,6,7]).includes(w.num)?'selected':''}`} style={{padding:'10px 16px'}}>
+<div className="font-bold text-xs">{w.label}</div><div className="text-xs" style={{color:'var(--text-muted)'}}>{w.dates}</div>
+{!w.full&&<div className="text-xs" style={{color:'#f59e0b',fontWeight:600}}>Short week</div>}
+</div>))}
+</div>
+</div>
+{children.length>1&&<div className="mt-6" style={{padding:'14px 18px',background:'var(--primary-50)',borderRadius:'var(--radius-md)',border:'1px solid var(--primary-200)'}}>
+<label className="flex items-center gap-3 cursor-pointer">
+<input type="checkbox" checked={preferences.sameCamp!==false} onChange={e=>setSamecamp(e.target.checked)} className="w-5 h-5" style={{accentColor:'var(--primary)'}}/>
+<span className="text-sm font-semibold" style={{color:'var(--primary-dark)'}}>Keep siblings at the same camp/location when possible</span>
+</label></div>}
+<div className="mt-6">
+<label className="block text-xs font-bold mb-2" style={{color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.05em'}}>Additional Notes</label>
+<textarea value={preferences.notes||''} onChange={e=>setNotes(e.target.value)} rows={3} placeholder="e.g. 'Hudson must do flag football', 'Harper loves sparkles', 'We're on vacation week 3'..." style={{resize:'vertical'}}/>
+</div>
+</div>
+<div className="flex gap-3">
+<button onClick={onBack} className="btn-secondary flex-1">&larr; Back</button>
+<button onClick={onNext} disabled={!hasInterests} className={`btn-primary flex-1 ${!hasInterests?'opacity-50 cursor-not-allowed':''}`}>Generate Camp Plan &rarr;</button>
+</div>
+</div>);
+}
+
+function LoadingStep({messages,mode}){
+const campCount=CAMP_DATA.enrichmentCamps.length+CAMP_DATA.traditionalCamps.length;
+const subtitle=mode==='rules'?`Our smart engine is filtering ${campCount}+ camps to find the best fit`:`Our AI is analyzing ${campCount}+ camps to find the best fit`;
+return(<div className="fade-in max-w-lg mx-auto text-center py-16">
+<div className="spinner mx-auto mb-8"></div>
+<h2 className="text-xl font-black mb-2" style={{color:'var(--text-primary)',letterSpacing:'-.02em'}}>Creating Your Perfect Summer...</h2>
+<p className="text-sm mb-8" style={{color:'var(--text-muted)'}}>{subtitle}</p>
+<div className="space-y-3" style={{textAlign:'left',maxWidth:360,margin:'0 auto'}}>
+{messages.map((m,i)=>(<div key={i} className="flex items-center gap-3 text-sm" style={{animation:`slideIn .3s ease ${i*0.15}s both`}}>
+<span style={{width:24,height:24,borderRadius:'50%',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:12,flexShrink:0,background:i===messages.length-1?'var(--primary-100)':'var(--surface-alt)',color:i===messages.length-1?'var(--primary)':'var(--text-muted)'}}>{i===messages.length-1?'\u25B6':'\u2713'}</span>
+<span style={{color:i===messages.length-1?'var(--primary)':'var(--text-muted)',fontWeight:i===messages.length-1?600:400}}>{m}</span>
+</div>))}
+</div>
+</div>);
+}
+
+function ResultsStep({results,children,preferences,onBack,onRegenerate}){
+const [activeTab,setActiveTab]=useState(0);
+const [customScenario,setCustomScenario]=useState(null);
+const [swapModal,setSwapModal]=useState(null);
+const [swappedCells,setSwappedCells]=useState(new Set());
+const [varietyLevels,setVarietyLevels]=useState((results&&results.scenarios||[]).map(()=>50));
+const [localScenarios,setLocalScenarios]=useState(null);
+const varietyTimer=useRef(null);
+
+// Reset when results change (e.g. user clicks Regenerate)
+useEffect(()=>{
+setLocalScenarios(null);
+setVarietyLevels((results&&results.scenarios||[]).map(()=>50));
+setCustomScenario(null);
+setSwappedCells(new Set());
+setActiveTab(0);
+},[results]);
+
+const handleVarietyChange=(idx,newVal)=>{
+setVarietyLevels(prev=>{const n=[...prev];n[idx]=newVal;return n;});
+if(varietyTimer.current)clearTimeout(varietyTimer.current);
+varietyTimer.current=setTimeout(()=>{
+const base=(localScenarios||results.scenarios)[idx];
+if(!base||!base._strategy)return;
+const childrenInfo=children.map((c,i)=>({...c,index:i,ageAtStart:calcAge(c.dob,'2026-06-15'),ageAtEnd:calcAge(c.dob,'2026-07-31'),interests:(preferences.childInterests||{})[i]||[]}));
+const fresh=buildRuleScenario(base.name,base._origDesc||base.description,childrenInfo,preferences,base._strategy,newVal);
+setLocalScenarios(prev=>{const n=[...(prev||results.scenarios)];n[idx]=fresh;return n;});
+},250);
+};
+
+const getVarietyLabel=(val)=>{
+if(val<15)return{text:'Consistent',bg:'#f3f4f6',color:'#6b7280'};
+if(val<35)return{text:'Low Variety',bg:'#dbeafe',color:'#1e40af'};
+if(val<65)return{text:'Moderate',bg:'#d1fae5',color:'#065f46'};
+if(val<85)return{text:'High Variety',bg:'#fef3c7',color:'#92400e'};
+return{text:'Max Variety',bg:'#fce7f3',color:'#9d174d'};
+};
+
+if(!results||!results.scenarios)return(<div className="card text-center"><p className="text-red-600">Something went wrong. Please try again.</p><button onClick={onBack} className="btn-secondary mt-4">&larr; Back</button></div>);
+
+const displayScenarios=localScenarios||results.scenarios;
+// All scenarios: original + custom if exists
+const allScenarios=[...displayScenarios];
+const customIdx=customScenario?allScenarios.length:-1;
+if(customScenario)allScenarios.push(customScenario);
+
+const handleActivityClick=(act,weekIdx,actIdx,weekNum,weekLabel,scenarioWeeks)=>{
+// Don't allow swapping "Both" swim lessons (shared resource)
+if(act.child==='Both')return;
+// Figure out child's age
+const childObj=children.find(c=>c.name===act.child);
+if(!childObj)return;
+const childAge=calcAge(childObj.dob,'2026-06-15');
+// Get all activities for this week to check conflicts
+const weekActs=scenarioWeeks[weekIdx]?.activities||[];
+const alts=findAlternatives({...act,_cat:act._cat||''},weekNum,act.child,childAge,weekActs);
+setSwapModal({activity:{...act},alternatives:alts,weekIdx,actIdx,weekNum,weekLabel,childName:act.child,weekActivities:weekActs});
+};
+
+const handleSwapSelect=(alt,warns)=>{
+// Create or update custom scenario
+const sourceIdx=activeTab===customIdx?customIdx:activeTab;
+const source=sourceIdx===customIdx?customScenario:JSON.parse(JSON.stringify(displayScenarios[activeTab]));
+const custom=customScenario?JSON.parse(JSON.stringify(customScenario)):JSON.parse(JSON.stringify(source));
+if(!customScenario){
+custom.name='Custom Plan';
+custom.description='Your personalized plan with hand-picked swaps. Based on "'+source.name+'" with your modifications.';
+}
+// Replace the activity
+const weekData=custom.weeks[swapModal.weekIdx];
+if(weekData&&weekData.activities[swapModal.actIdx]){
+const oldAct=weekData.activities[swapModal.actIdx];
+weekData.activities[swapModal.actIdx]={
+child:oldAct.child,
+name:alt.name,
+classId:alt.classId,
+time:alt.time,
+location:alt.location,
+price:alt.price,
+notes:alt.desc?alt.desc.substring(0,80):'',
+_cat:alt.cat,
+_swapped:true,
+_warnings:warns||[]
+};
+// Recalculate cost estimate
+let totalCost=0;
+custom.weeks.forEach(w=>(w.activities||[]).forEach(a=>{
+const m=(a.price||'').match(/\$(\d+)/);
+if(m)totalCost+=parseInt(m[1]);
+}));
+custom.estimatedCost='~$'+totalCost.toLocaleString()+' total (resident pricing)';
+// Update highlights
+if(!custom.highlights)custom.highlights=[];
+const swapNote='Swapped: '+oldAct.name+' \u2192 '+alt.name+' ('+swapModal.childName+', '+swapModal.weekLabel+')';
+if(!custom.highlights.includes(swapNote))custom.highlights.push(swapNote);
+}
+setCustomScenario(custom);
+setSwappedCells(prev=>new Set([...prev,swapModal.weekIdx+'-'+swapModal.actIdx]));
+setActiveTab(customIdx>=0?customIdx:allScenarios.length-1);
+setSwapModal(null);
+// Jump to custom tab after first swap
+setTimeout(()=>setActiveTab(displayScenarios.length),50);
+};
+
+const displayTab=activeTab;
+const sc=allScenarios[displayTab];
+
+return(<div className="fade-in max-w-4xl mx-auto">
+<div className="text-center mb-8">
+<h2 className="text-2xl font-black mb-2" style={{color:'var(--text-primary)',letterSpacing:'-.02em'}}>Your Summer Camp Plan</h2>
+<p style={{color:'var(--text-muted)',fontSize:14}}>We created {displayScenarios.length} scenario{displayScenarios.length!==1?'s':''} for your family. <span style={{color:'var(--primary)',fontWeight:600}}>Click any class to swap it.</span></p>
+</div>
+{results.summary&&<div className="card" style={{background:'var(--primary-50)',border:'1px solid var(--primary-200)',padding:'18px 24px'}}>
+<p className="text-sm" style={{color:'var(--primary-dark)'}}>{results.summary}</p></div>}
+<div className="flex mb-6 overflow-x-auto" style={{borderBottom:'2px solid var(--border)',gap:4}}>
+{displayScenarios.map((s,i)=>(<div key={i} className={`scenario-tab ${displayTab===i?'active':''}`} onClick={()=>setActiveTab(i)}>
+{s.name||`Scenario ${i+1}`}
+</div>))}
+{customScenario&&<div className={`scenario-tab ${displayTab===displayScenarios.length?'active':''}`} onClick={()=>setActiveTab(displayScenarios.length)} style={displayTab===displayScenarios.length?{color:'#7c3aed',borderBottomColor:'#7c3aed'}:{}}>
+{"\u2728"} Custom Plan <span className="custom-badge">{customScenario.highlights?customScenario.highlights.filter(h=>h.startsWith('Swapped:')).length:0} swaps</span>
+</div>}
+</div>
+{sc&&<div className="fade-in">
+{sc.description&&<div className="card" style={{borderLeft:'4px solid var(--primary)'}}>
+<p className="text-sm" style={{color:'var(--text-secondary)',lineHeight:'1.7'}}>{sc.description}</p>
+{sc.estimatedCost&&<div className="mt-3 inline-flex items-center gap-2" style={{padding:'8px 16px',background:'var(--primary-50)',borderRadius:'var(--radius-sm)',border:'1px solid var(--primary-200)'}}>
+<span style={{fontSize:16}}>{"\uD83D\uDCB0"}</span>
+<span className="text-sm font-bold" style={{color:'var(--primary-dark)'}}>{sc.estimatedCost}</span>
+</div>}
+{sc._strategy&&displayTab<displayScenarios.length&&<div className="variety-wrap">
+<div className="flex justify-between items-center mb-2">
+<label className="text-xs font-bold" style={{color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'.05em'}}>Variety Level</label>
+{(()=>{const vl=getVarietyLabel(varietyLevels[displayTab]||50);return <span className="variety-level" style={{background:vl.bg,color:vl.color}}>{vl.text}</span>;})()}
+</div>
+<div className="flex items-center gap-3">
+<span className="variety-label">Same every week</span>
+<input type="range" min="0" max="100" value={varietyLevels[displayTab]||50} onChange={e=>handleVarietyChange(displayTab,parseInt(e.target.value))} className="variety-slider"/>
+<span className="variety-label text-right">Max variety</span>
+</div>
+<p className="text-xs mt-2" style={{color:'var(--text-muted)'}}>Slide left for a consistent schedule. Slide right for different AM/PM classes, camp rotation, and more enrichments.</p>
+</div>}
+</div>}
+{(sc.weeks||[]).map((wk,wi)=>(<div key={wi} className="mb-6" style={{animation:`slideIn .3s ease ${wi*0.05}s both`}}>
+<div className="week-header flex items-center justify-between">
+<span>{wk.weekLabel||`Week ${wk.week}`}</span>
+<span style={{fontSize:12,fontWeight:500,opacity:.75}}>{(wk.activities||[]).length} activities</span>
+</div>
+<div style={{background:'var(--surface)',borderRadius:'0 0 var(--radius-md) var(--radius-md)',border:'1px solid var(--border)',borderTop:'none',padding:'16px 20px'}}>
+{(wk.activities||[]).map((act,ai)=>{
+const isSwapped=act._swapped;
+const isBoth=act.child==='Both';
+return(<div key={ai}
+className={`result-card ${isBoth?'result-both':children.findIndex(c=>c.name===act.child)===0?'result-hudson':'result-harper'} ${!isBoth?'clickable':''} ${isSwapped&&swappedCells.has(wi+'-'+ai)?'swapped':''}`}
+onClick={()=>{if(!isBoth)handleActivityClick(act,wi,ai,wk.week||wi+1,wk.weekLabel||('Week '+(wk.week||wi+1)),sc.weeks);}}>
+<div className="flex justify-between items-start">
+<div className="flex-1">
+<span className={`tag ${isBoth?'tag-both':children.findIndex(c=>c.name===act.child)===0?'tag-hudson':'tag-harper'}`}>{act.child}</span>
+<span className="font-bold text-sm ml-2" style={{color:'var(--text-primary)'}}>{act.name}</span>
+{act.classId&&<span className="text-xs ml-2" style={{color:'var(--text-muted)'}}>{act.classId}</span>}
+{isSwapped&&<span className="swapped-indicator">swapped</span>}
+</div>
+{act.price&&<span className="text-xs font-bold px-3 py-1 rounded-lg" style={{color:'var(--primary-dark)',background:'var(--primary-50)',border:'1px solid var(--primary-200)',whiteSpace:'nowrap'}}>{act.price}</span>}
+</div>
+<div className="text-xs mt-2" style={{color:'var(--text-secondary)'}}>{act.time} &bull; {act.location}</div>
+{act.notes&&<div className="text-xs mt-1 italic" style={{color:'var(--text-muted)'}}>{act.notes}</div>}
+{isSwapped&&act._warnings&&act._warnings.length>0&&<div className="flex flex-wrap mt-2">
+{act._warnings.map((w,wi)=>(<span key={wi} className={`warn-badge warn-${w.type}`}>{w.icon} {w.text}</span>))}
+</div>}
+</div>);})}
+</div></div>))}
+{sc.highlights&&<div className="card" style={{background:'#fffbeb',border:'1px solid #fcd34d'}}>
+<div className="flex items-center gap-2 mb-3"><span style={{fontSize:16}}>{"\uD83D\uDCA1"}</span><h4 className="font-bold text-sm" style={{color:'#92400e'}}>Highlights & Tips</h4></div>
+<ul className="text-xs space-y-2" style={{color:'#78350f'}}>
+{sc.highlights.map((h,i)=>(<li key={i} className="flex items-start gap-2"><span style={{color:'#f59e0b',flexShrink:0}}>&#x2022;</span><span>{h}</span></li>))}
+</ul></div>}
+</div>}
+<div className="flex flex-wrap gap-3 mt-8 no-print">
+<button onClick={onBack} className="btn-secondary flex-1" style={{minWidth:140}}>&larr; Adjust Preferences</button>
+<button onClick={onRegenerate} className="btn-primary flex-1" style={{minWidth:140}}>Regenerate Plans</button>
+{customScenario&&<button onClick={()=>{setCustomScenario(null);setSwappedCells(new Set());setActiveTab(0);}} className="btn-secondary flex-1" style={{borderColor:'#7c3aed',color:'#7c3aed',minWidth:140}}>Clear Custom</button>}
+<button onClick={()=>window.print()} className="btn-secondary" style={{minWidth:80}}>Print</button>
+</div>
+{swapModal&&<SwapModal activity={swapModal.activity} alternatives={swapModal.alternatives} childName={swapModal.childName} weekLabel={swapModal.weekLabel} weekActivities={swapModal.weekActivities} preferences={preferences} children={children} onSelect={handleSwapSelect} onClose={()=>setSwapModal(null)}/>}
+</div>);
+}
+
+// ============================================================
+// RULE-BASED RECOMMENDATION ENGINE
+// ============================================================
+const CAT_MAP={'Sports':'sports','Art':'art','Tech':'tech','STEM':'stem','Performing':'performing','Film':'film','Cooking':'cooking'};
+const INTEREST_TO_CATS={sports:['Sports'],art:['Art'],tech:['Tech'],stem:['STEM'],performing:['Performing'],film:['Film'],cooking:['Cooking'],entrepreneurship:['Tech'],swimming:[]};
+
+function parseTime(t){if(!t)return null;const m=t.match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return null;let h=parseInt(m[1]);const mi=parseInt(m[2]);if(m[3].toUpperCase()==='PM'&&h!==12)h+=12;if(m[3].toUpperCase()==='AM'&&h===12)h=0;return h*60+mi;}
+function getTimeRange(timeStr){const parts=timeStr.split('-');if(parts.length!==2)return null;return{start:parseTime(parts[0].trim()),end:parseTime(parts[1].trim())};}
+function timesOverlap(t1,t2){const a=getTimeRange(t1),b=getTimeRange(t2);if(!a||!b)return false;return a.start<b.end&&b.start<a.end;}
+
+function isEligible(age,camp){return age>=camp.minAge&&age<=camp.maxAge;}
+
+// Get ALL eligible enrichments for a given week/age — optionally filter by categories
+function getEnrichForWeek(w,age,interests,cats,usedIds){
+return CAMP_DATA.enrichmentCamps.filter(c=>{
+const cw=c.multiWeek?c.multiWeek.find(x=>x.w===w):null;
+const campWeek=c.week||null;
+if(!cw&&campWeek!==w)return false;
+if(!isEligible(age,c))return false;
+const rid=c.id||(cw&&cw.id);
+if(usedIds&&usedIds.has(rid))return false;
+if(cats&&cats.length>0&&!cats.includes(c.cat))return false;
+return true;
+}).map(c=>{const cw=c.multiWeek?c.multiWeek.find(x=>x.w===w):null;return{...c,resolvedId:cw?cw.id:c.id};});
+}
+
+// Get all eligible base camps for a child for a given week, sorted by preference
+function getEligibleBaseCamps(childAge,weekNum,preferFullDay){
+const eligible=CAMP_DATA.traditionalCamps.filter(c=>isEligible(childAge,c)&&c.weeks.find(w=>w.w===weekNum));
+const prefOrder=preferFullDay?['full-day','half-day']:['half-day','full-day'];
+return [...eligible].sort((a,b)=>{const ai=prefOrder.indexOf(a.type),bi=prefOrder.indexOf(b.type);return ai-bi;});
+}
+
+// Score an enrichment by how well it matches a child's interests
+function enrichScore(enrich,interests){
+const catMap={'Sports':'sports','Art':'art','Tech':'tech','STEM':'stem','Performing':'performing','Film':'film','Cooking':'cooking'};
+const intKey=catMap[enrich.cat]||'';
+if(intKey&&interests.includes(intKey))return 10;
+if(interests.includes('entrepreneurship')&&enrich.cat==='Tech')return 8;
+return 1; // still valid, just not a preference match
+}
+
+function buildRuleScenario(name,desc,childrenInfo,prefs,strategy,variety){
+const v=Math.max(0,Math.min(100,variety!=null?variety:50))/100;
+const weeks=prefs.weeks||[1,2,3,4,5,6,7];
+const wantSwim=childrenInfo.some(c=>c.interests.includes('swimming'));
+// At high variety (>65%), prefer half-day base camps to enable AM/PM splitting
+const preferFullDay=v>0.65?false:(prefs.coverage!=='mornings');
+let totalCost=0;
+// Variety-derived knobs
+const rotationWindow=Math.round(v*5); // 0=same camp always, 5=avoid last 5
+const baseMaxE=strategy==='enrichment'?3:(strategy==='balanced'?2:1);
+const varMaxEnrich=Math.min(Math.round(v*baseMaxE*1.5),3); // 0 at v=0, up to 3 at v=1
+// Track which enrichment IDs and base camp names we've used, per child, for variety
+const usedEnrichIds={};const usedBaseCampNames={};
+childrenInfo.forEach(c=>{usedEnrichIds[c.name]=new Set();usedBaseCampNames[c.name]=[];});
+
+const weekResults=weeks.map(wNum=>{
+const wk=WEEKS.find(w=>w.num===wNum);const isShort=!wk.full;
+const activities=[];const usedTimes={};
+childrenInfo.forEach(c=>{usedTimes[c.name]=[];});
+
+// ── PHASE 1: Pick base camp for each child ──
+const childBaseCamps={};
+childrenInfo.forEach((child,ci)=>{
+const age=child.ageAtStart;
+const eligible=getEligibleBaseCamps(age,wNum,preferFullDay);
+if(eligible.length===0)return;
+
+// Try to co-locate with first child's camp when applicable
+let pick=null;
+if(prefs.sameCamp!==false&&ci>0&&childBaseCamps[childrenInfo[0].name]){
+const sibCamp=childBaseCamps[childrenInfo[0].name];
+pick=eligible.find(c=>c.location===sibCamp.location);
+}
+
+if(!pick){
+// Build candidate pool based on strategy
+let pool;
+if(strategy==='sports'){
+const sportsy=eligible.filter(c=>c.sports||c.name.includes('Sports')||c.name.includes('DesTEEN'));
+pool=sportsy.length>0?sportsy:eligible;
+if(v>0.7)pool=eligible; // At max variety, open up to all camps
+} else if(strategy==='balanced'){
+pool=eligible;
+} else {
+const halfDay=eligible.filter(c=>c.type==='half-day');
+pool=(v<0.5&&halfDay.length>0)?halfDay:eligible;
+}
+// At high variety with non-enrichment strategy, mix in half-day for AM/PM splitting
+if(v>0.65&&strategy!=='enrichment'){
+const halfDay=eligible.filter(c=>c.type==='half-day'&&pool.indexOf(c)<0);
+if(halfDay.length>0)pool=pool.concat(halfDay);
+}
+// Variety controls rotation within the pool
+if(rotationWindow===0){
+// No variety: same camp every week
+pick=usedBaseCampNames[child.name].length>0?(pool.find(c=>c.name===usedBaseCampNames[child.name][0])||pool[0]):pool[0];
+} else {
+const recentNames=usedBaseCampNames[child.name].slice(-rotationWindow);
+const lru=pool.filter(c=>!recentNames.includes(c.name));
+pick=lru.length>0?lru[wNum%lru.length]:pool[wNum%pool.length];
+}
+}
+
+if(pick){
+usedBaseCampNames[child.name].push(pick.name);
+childBaseCamps[child.name]=pick;
+const wEntry=pick.weeks.find(w=>w.w===wNum);
+const price=isShort?(pick.shortWeekR||pick.priceR):pick.priceR;
+totalCost+=price;
+const ft=pick.fieldTrips?pick.fieldTrips[wNum-1]:null;
+const sp=pick.sports?pick.sports[wNum-1]:null;
+let noteStr='';
+if(sp)noteStr+='Sports: '+sp.join(', ');
+if(ft)noteStr+=(noteStr?' | ':'')+'Field trip: '+ft;
+if(!noteStr)noteStr=pick.type==='full-day'?'Full-day camp with crafts, games & activities':'Half-day camp program';
+activities.push({child:child.name,name:pick.name+' ('+pick.ageLabel+')',classId:wEntry.id,time:pick.time,location:pick.location.split(',')[0],price:'$'+price+'(R)',notes:noteStr,_loc:pick.location,_cat:'Traditional'});
+usedTimes[child.name].push(pick.time);
+}
+});
+
+// ── PHASE 2: Layer enrichments for each child ──
+childrenInfo.forEach((child)=>{
+const age=child.ageAtStart;
+const interests=child.interests;
+const allCats=interests.flatMap(i=>INTEREST_TO_CATS[i]||[]);
+
+// How many enrichments depends on variety level and budget
+const maxEnrich=varMaxEnrich;
+const budgetOk=prefs.budget!=='budget';
+
+// Get ALL eligible enrichments for this week (no category filter yet)
+const allAvail=getEnrichForWeek(wNum,age,interests,null,usedEnrichIds[child.name]);
+
+for(let ei=0;ei<maxEnrich&&budgetOk;ei++){
+// Find enrichments that don't conflict with already-scheduled times
+const noConflict=allAvail.filter(e=>
+!usedTimes[child.name].some(t=>timesOverlap(t,e.time))&&
+!usedEnrichIds[child.name].has(e.resolvedId)
+);
+if(noConflict.length===0)break;
+
+// For 'sports' strategy, prefer sports enrichments; for others, prefer interest-matched
+let sorted;
+if(strategy==='sports'){
+sorted=[...noConflict].sort((a,b)=>{
+const aS=a.cat==='Sports'?0:1;const bS=b.cat==='Sports'?0:1;
+if(aS!==bS)return aS-bS;
+return enrichScore(b,interests)-enrichScore(a,interests);
+});
+} else {
+// Score by interest match, prefer variety in categories already used
+sorted=[...noConflict].sort((a,b)=>enrichScore(b,interests)-enrichScore(a,interests));
+}
+
+const pick=sorted[0];
+totalCost+=pick.priceR;
+usedEnrichIds[child.name].add(pick.resolvedId);
+activities.push({child:child.name,name:pick.name,classId:pick.resolvedId,time:pick.time,location:pick.location.split(',')[0],price:'$'+pick.priceR+'(R)',notes:pick.desc?pick.desc.substring(0,90):'',_cat:pick.cat});
+usedTimes[child.name].push(pick.time);
+// Remove from available pool for next iteration
+const pickIdx=allAvail.findIndex(e=>e.resolvedId===pick.resolvedId);
+if(pickIdx>=0)allAvail.splice(pickIdx,1);
+}
+});
+
+// ── PHASE 3: Add swim lessons if interested ──
+if(wantSwim){
+const swimLevel=CAMP_DATA.swimLessons.level1;
+// Pick a time slot that doesn't conflict with any child's schedule
+const allChildTimes=Object.values(usedTimes).flat();
+const pools=[...swimLevel.monteVista,...(swimLevel.sanRamon||[])];
+const goodSlot=pools.find(s=>s.ids&&s.ids[wNum-1]&&!allChildTimes.some(t=>timesOverlap(t,s.time+'-'+(parseInt(s.time)+0)+':30 '+(s.time.includes('PM')?'PM':'AM'))));
+const slot=goodSlot||pools.find(s=>s.ids&&s.ids[wNum-1]);
+if(slot&&slot.ids[wNum-1]){
+totalCost+=swimLevel.priceR*childrenInfo.length;
+const poolName=swimLevel.monteVista.includes(slot)?'Monte Vista Pool':'San Ramon Pool';
+activities.push({child:childrenInfo.length>1?'Both':childrenInfo[0].name,name:swimLevel.name+' (M-Th)',classId:slot.ids[wNum-1],time:slot.time+' @ '+poolName,location:poolName,price:'$'+swimLevel.priceR+'/child(R)',notes:swimLevel.duration+' lesson, Mon-Thu | '+swimLevel.desc,_cat:'Swimming'});
+}
+}
+
+return{week:wNum,weekLabel:wk.label+': '+wk.dates+(isShort?' (short week)':''),activities};
+});
+
+const highlights=[];
+const campNames=[...new Set(weekResults.flatMap(w=>w.activities.filter(a=>a._cat==='Traditional').map(a=>a.name)))];
+const enrichNames=[...new Set(weekResults.flatMap(w=>w.activities.filter(a=>a._cat&&a._cat!=='Traditional'&&a._cat!=='Swimming').map(a=>a.name)))];
+if(strategy==='sports'){
+highlights.push('Sports-focused camp rotation: '+campNames.slice(0,3).join(', '));
+if(enrichNames.length>0)highlights.push('Sports enrichments: '+enrichNames.slice(0,4).join(', '));
+highlights.push('Traditional camps include field trips and organized sports each week');
+} else if(strategy==='balanced'){
+highlights.push('Rotates between camps: '+campNames.slice(0,4).join(', '));
+if(enrichNames.length>0)highlights.push('Enrichment variety: '+enrichNames.slice(0,5).join(', '));
+highlights.push('Mixes interests each week for a well-rounded summer');
+} else {
+if(enrichNames.length>0)highlights.push('Specialty experiences: '+enrichNames.slice(0,5).join(', '));
+highlights.push('Maximizes unique enrichment camps with base camp coverage');
+}
+if(wantSwim)highlights.push('Swim lessons included every week');
+highlights.push('Register at danville.ca.gov/recguide (Residents: Feb 10 / Open: Feb 17)');
+
+return{name,description:desc,estimatedCost:'~$'+totalCost.toLocaleString()+' total (resident pricing)',weeks:weekResults,highlights,_strategy:strategy,_origDesc:desc};
+}
+
+function generateRuleBasedPlan(children,preferences){
+const childrenInfo=children.map((c,i)=>({...c,index:i,ageAtStart:calcAge(c.dob,'2026-06-15'),ageAtEnd:calcAge(c.dob,'2026-07-31'),interests:(preferences.childInterests||{})[i]||[]}));
+const scenarios=[];
+scenarios.push(buildRuleScenario(
+'Sports & Active',
+'Sports-focused camps as the base with athletic enrichments layered on. Prefers Play \'n\' Sports and multi-sport programs.',
+childrenInfo,preferences,'sports',50));
+scenarios.push(buildRuleScenario(
+'Balanced Mix',
+'Rotates between different traditional camps each week and adds enrichment classes matched to each child\'s interests. A little bit of everything.',
+childrenInfo,preferences,'balanced',50));
+if(preferences.budget!=='budget'){
+scenarios.push(buildRuleScenario(
+'Enrichment Explorer',
+'Prioritizes specialty enrichment camps (art, STEM, tech, performing arts) with half-day base camps for structure. Maximizes unique experiences.',
+childrenInfo,preferences,'enrichment',50));
+}
+const names=childrenInfo.map(c=>c.name).join(' & ');
+return{summary:`Personalized camp plans for ${names} covering ${(preferences.weeks||[1,2,3,4,5,6,7]).length} weeks of Summer 2026. Each scenario includes base camps, enrichment add-ons${childrenInfo.some(c=>c.interests.includes('swimming'))?' and swim lessons':''} for every child.`,scenarios};
+}
+
+// ============================================================
+// ALTERNATIVE FINDER (for swap modal)
+// ============================================================
+function findAlternatives(activity,weekNum,childName,childAge,otherActivities){
+// Find all camps (traditional + enrichment + swim) that:
+// 1. Run during this week
+// 2. Are age-eligible for this child
+// 3. Don't conflict with the child's OTHER activities this week
+// 4. Are not the current activity
+const otherTimes=otherActivities.filter(a=>a.child===childName||a.child==='Both').filter(a=>a.classId!==activity.classId).map(a=>a.time);
+const results=[];
+// Traditional camps
+CAMP_DATA.traditionalCamps.forEach(c=>{
+const wEntry=c.weeks.find(w=>w.w===weekNum);
+if(!wEntry)return;
+if(!isEligible(childAge,c))return;
+if(wEntry.id===activity.classId)return;
+const wk=WEEKS.find(w=>w.num===weekNum);const isShort=wk&&!wk.full;
+const price=isShort?(c.shortWeekR||c.priceR):c.priceR;
+const ft=c.fieldTrips?c.fieldTrips[weekNum-1]:null;
+const sp=c.sports?c.sports[weekNum-1]:null;
+if(otherTimes.some(t=>timesOverlap(t,c.time)))return;
+results.push({name:c.name+' ('+c.ageLabel+')',classId:wEntry.id,time:c.time,location:c.location.split(',')[0],price:'$'+price+'(R)',priceNum:price,cat:'Traditional',desc:(sp?'Sports: '+sp.join(', '):'General day camp')+(ft?' | Field trip: '+ft:''),type:c.type});
+});
+// Enrichment camps
+CAMP_DATA.enrichmentCamps.forEach(c=>{
+const cw=c.multiWeek?c.multiWeek.find(x=>x.w===weekNum):null;
+const campWeek=c.week||null;
+if(!cw&&campWeek!==weekNum)return;
+if(!isEligible(childAge,c))return;
+const rid=cw?cw.id:c.id;
+if(rid===activity.classId)return;
+if(otherTimes.some(t=>timesOverlap(t,c.time)))return;
+results.push({name:c.name,classId:rid,time:c.time,location:c.location.split(',')[0],price:'$'+c.priceR+'(R)',priceNum:c.priceR,cat:c.cat,desc:c.desc||'',type:'enrichment'});
+});
+// Swim lessons
+Object.entries(CAMP_DATA.swimLessons).forEach(([key,level])=>{
+['monteVista','sanRamon'].forEach(pool=>{
+if(!level[pool])return;
+level[pool].forEach(slot=>{
+if(!slot.ids||!slot.ids[weekNum-1])return;
+const sid=slot.ids[weekNum-1];
+if(sid===activity.classId)return;
+if(!isEligible(childAge,level))return;
+const timeStr=slot.time+' (30 min)';
+if(otherTimes.some(t=>timesOverlap(t,timeStr)))return;
+results.push({name:level.name+' @ '+(pool==='monteVista'?'Monte Vista':'San Ramon'),classId:sid,time:slot.time+' ('+level.duration+')',location:pool==='monteVista'?'Monte Vista HS Pool':'San Ramon Olympic Pool',price:'$'+level.priceR+'(R)',priceNum:level.priceR,cat:'Swimming',desc:level.desc||'',type:'swim'});
+});
+});
+});
+// Sort: same category first, then by price
+const currentCat=activity._cat||'';
+results.sort((a,b)=>{
+const aSame=a.cat===currentCat?0:1;
+const bSame=b.cat===currentCat?0:1;
+if(aSame!==bSame)return aSame-bSame;
+return a.priceNum-b.priceNum;
+});
+return results;
+}
+
+// ============================================================
+// SWAP WARNING GENERATOR
+// ============================================================
+// Known facility locations for distance approximation
+const FACILITY_ZONES={
+'Teen Center at Diablo Vista Middle School':'central',
+'Teen Center at Charlotte Wood Middle School':'south',
+'Meeting Rooms at Oak Hill Park Community Center':'central',
+'Blacktop at Los Cerros Middle School':'north',
+'Gymnasium, Diablo Vista Middle School':'central',
+'East Soccer Field, Diablo Vista Park':'central',
+'Soccer Field 1, Sycamore Valley Park':'central',
+'Cottage, Hap Magee Ranch Park':'central',
+'Swain House, Hap Magee Ranch Park':'central',
+'Magee House, Hap Magee Ranch Park':'central',
+'Ballroom, Oak Hill Park Community Center':'central',
+'Lounge, Danville Community Center':'central',
+'Las Trampas Room, Danville Community Center':'central',
+'Las Trampas, Danville Community Center':'central',
+'Art Room, Danville Community Center':'central',
+'Mt. Diablo Room, Danville Library':'central',
+'Village Theatre':'central',
+'Ball Diamond 1, Osage Station Park':'south',
+'Ball Diamond 3, Osage Station Park':'south',
+'Soccer Field 6, Osage Station Park':'south',
+'Tennis Courts, Monte Vista High School':'south',
+'Monte Vista HS Pool':'south',
+'San Ramon Olympic Pool':'far-south'
+};
+function getZone(loc){
+if(!loc)return 'unknown';
+// Try exact match first, then partial
+for(const[key,zone] of Object.entries(FACILITY_ZONES)){
+if(key.includes(loc)||loc.includes(key.split(',')[0]))return zone;
+}
+return 'unknown';
+}
+
+function generateSwapWarnings(alt,currentActivity,weekActivities,childName,preferences,children){
+const warnings=[];
+// 1. COVERAGE GAP: if user wants full-day and this swap creates a gap
+if(preferences.coverage==='full'){
+const altRange=getTimeRange(alt.time);
+const curRange=getTimeRange(currentActivity.time);
+if(altRange&&curRange){
+const curDuration=curRange.end-curRange.start;
+const altDuration=altRange.end-altRange.start;
+// Current was full-day (5+ hrs) but swap is half-day (< 4hrs)
+if(curDuration>=300&&altDuration<240){
+warnings.push({type:'orange',icon:'\u23F0',text:'Half-day only \u2014 leaves a coverage gap. Consider adding another class.'});
+}
+// Check if the rest of the day is uncovered
+const otherActs=weekActivities.filter(a=>a.child===childName&&a.classId!==currentActivity.classId);
+const otherRanges=otherActs.map(a=>getTimeRange(a.time)).filter(Boolean);
+const allRanges=[altRange,...otherRanges].sort((a,b)=>a.start-b.start);
+// Check for a gap > 2 hours between 9am-3:30pm
+let lastEnd=540; // 9:00 AM
+for(const r of allRanges){
+if(r.start>lastEnd+120){// gap > 2 hours
+warnings.push({type:'orange',icon:'\u26A0\uFE0F',text:`Gap from ${Math.floor(lastEnd/60)}:${String(lastEnd%60).padStart(2,'0')} to ${Math.floor(r.start/60)}:${String(r.start%60).padStart(2,'0')} with no coverage.`});
+break;
+}
+lastEnd=Math.max(lastEnd,r.end);
+}
+if(lastEnd<930&&allRanges.length>0){// ends before 3:30 PM
+const h=Math.floor(lastEnd/60),m=lastEnd%60;
+const ampm=h>=12?'PM':'AM';
+const h12=h>12?h-12:h;
+warnings.push({type:'blue',icon:'\u2139\uFE0F',text:`Day ends at ${h12}:${String(m).padStart(2,'0')} ${ampm}. You may want afternoon coverage.`});
+}
+}
+}
+// 2. SIBLING DISTANCE: if siblings should be together, check location mismatch
+if(preferences.sameCamp!==false&&children.length>1){
+const siblingNames=children.map(c=>c.name).filter(n=>n!==childName);
+const sibActivities=weekActivities.filter(a=>siblingNames.includes(a.child));
+if(sibActivities.length>0){
+const altZone=getZone(alt.location);
+const sibZones=sibActivities.map(a=>({name:a.child,zone:getZone(a.location),loc:a.location}));
+const mismatch=sibZones.find(s=>s.zone!=='unknown'&&altZone!=='unknown'&&s.zone!==altZone);
+if(mismatch){
+warnings.push({type:'orange',icon:'\uD83D\uDCCD',text:`Different area than ${mismatch.name}'s camp (${mismatch.loc}). Extra driving needed.`});
+}
+// Check if same zone but different specific facility
+const sameFacility=sibActivities.some(a=>{
+const aLoc=a.location||'';
+const altLoc=alt.location||'';
+return aLoc===altLoc||aLoc.split(',')[0]===altLoc.split(',')[0];
+});
+if(!sameFacility&&!mismatch&&sibActivities.length>0){
+warnings.push({type:'blue',icon:'\uD83D\uDCCD',text:`Different facility than sibling \u2014 same general area but separate drop-offs.`});
+}
+}
+}
+// 3. PRICE JUMP: if significantly more expensive
+const curPriceMatch=(currentActivity.price||'').match(/\$(\d+)/);
+const altPriceNum=alt.priceNum||0;
+if(curPriceMatch){
+const curPrice=parseInt(curPriceMatch[1]);
+const diff=altPriceNum-curPrice;
+if(diff>150){
+warnings.push({type:'orange',icon:'\uD83D\uDCB0',text:`$${diff} more expensive than current class.`});
+}else if(diff>50){
+warnings.push({type:'blue',icon:'\uD83D\uDCB0',text:`$${diff} more than current class.`});
+}
+}
+// 4. INTEREST MISMATCH: if this camp's category doesn't match child's interests
+const childIdx=children.findIndex(c=>c.name===childName);
+if(childIdx>=0){
+const childInterests=(preferences.childInterests||{})[childIdx]||[];
+const catToInterest={'Sports':'sports','Art':'art','Tech':'tech','STEM':'stem','Performing':'performing','Film':'film','Cooking':'cooking','Traditional':'','Swimming':'swimming'};
+const interestKey=catToInterest[alt.cat]||'';
+if(interestKey&&childInterests.length>0&&!childInterests.includes(interestKey)){
+warnings.push({type:'blue',icon:'\uD83C\uDFAF',text:`${alt.cat} isn't in ${childName}'s selected interests.`});
+}
+}
+return warnings;
+}
+
+// ============================================================
+// SWAP MODAL COMPONENT
+// ============================================================
+function SwapModal({activity,alternatives,childName,weekLabel,weekActivities,preferences,children,onSelect,onClose}){
+const [filter,setFilter]=useState('all');
+const cats=[...new Set(alternatives.map(a=>a.cat))];
+const filtered=filter==='all'?alternatives:alternatives.filter(a=>a.cat===filter);
+return(<div className="swap-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+<div className="swap-modal">
+<div style={{padding:'24px 24px 16px',borderBottom:'1px solid var(--border)',background:'var(--surface-alt)',borderRadius:'var(--radius-xl) var(--radius-xl) 0 0'}}>
+<div className="flex justify-between items-start">
+<div>
+<h3 className="font-black text-lg" style={{color:'var(--text-primary)',letterSpacing:'-.01em'}}>Swap Class</h3>
+<p className="text-sm mt-1" style={{color:'var(--text-muted)'}}>Replacing: <span className="font-bold" style={{color:'var(--text-primary)'}}>{activity.name}</span></p>
+<p className="text-xs mt-1" style={{color:'var(--text-muted)'}}>{childName} &bull; {weekLabel} &bull; {activity.time}</p>
+</div>
+<button onClick={onClose} style={{width:32,height:32,borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--surface)',border:'1px solid var(--border)',color:'var(--text-muted)',cursor:'pointer',fontSize:18,transition:'all .2s'}} onMouseOver={e=>{e.target.style.background='#fee2e2';e.target.style.color='#ef4444'}} onMouseOut={e=>{e.target.style.background='var(--surface)';e.target.style.color='var(--text-muted)'}}>&times;</button>
+</div>
+<div className="flex flex-wrap gap-2 mt-4">
+<button onClick={()=>setFilter('all')} className={`pill-filter ${filter==='all'?'active':''}`}>All ({alternatives.length})</button>
+{cats.map(cat=>(<button key={cat} onClick={()=>setFilter(cat)} className={`pill-filter ${filter===cat?'active':''}`}>{cat} ({alternatives.filter(a=>a.cat===cat).length})</button>))}
+</div>
+</div>
+<div className="swap-modal-body pt-4">
+{filtered.length===0&&<p className="text-center py-8" style={{color:'var(--text-muted)'}}>No alternatives match this filter.</p>}
+{filtered.map((alt,i)=>{
+const warns=generateSwapWarnings(alt,activity,weekActivities||[],childName,preferences||{},children||[]);
+return(<div key={i} className={`alt-card ${alt.cat===activity._cat?'same-cat':''} ${warns.length>0?'has-warnings':''}`} onClick={()=>onSelect(alt,warns)} style={{animation:`slideIn .2s ease ${i*0.03}s both`}}>
+<div className="flex justify-between items-start">
+<div className="flex-1">
+<div className="flex items-center gap-2">
+<span className="font-bold text-sm" style={{color:'var(--text-primary)'}}>{alt.name}</span>
+<span className="text-xs" style={{color:'var(--text-muted)'}}>{alt.classId}</span>
+</div>
+<div className="text-xs mt-1" style={{color:'var(--text-secondary)'}}>{alt.time} &bull; {alt.location}</div>
+{alt.desc&&<div className="text-xs mt-1" style={{color:'var(--text-muted)'}}>{alt.desc.substring(0,100)}</div>}
+{warns.length>0&&<div className="flex flex-wrap mt-2">
+{warns.map((w,wi)=>(<span key={wi} className={`warn-badge warn-${w.type}`}>{w.icon} {w.text}</span>))}
+</div>}
+</div>
+<div className="flex flex-col items-end ml-3" style={{gap:6}}>
+<span className="text-xs font-bold px-3 py-1 rounded-lg" style={{color:'var(--primary-dark)',background:'var(--primary-50)',border:'1px solid var(--primary-200)'}}>{alt.price}</span>
+<span className="text-xs px-2 py-1 rounded-md" style={{color:'var(--text-muted)',background:'var(--surface-alt)',border:'1px solid var(--border)'}}>{alt.cat}</span>
+{warns.length>0&&<span className="text-xs" style={{color:'#f59e0b',fontWeight:600}}>{warns.length} note{warns.length>1?'s':''}</span>}
+</div>
+</div>
+</div>);})}
+</div>
+</div>
+</div>);
+}
+
+// ============================================================
+// BUILD YOUR OWN PLAN
+// ============================================================
+function BuildYourOwnStep({children,preferences,onBack,onFinish}){
+const weeks=preferences.weeks||[1,2,3,4,5,6,7];
+const [activeWeek,setActiveWeek]=useState(weeks[0]);
+const [activeChild,setActiveChild]=useState(0);
+const [selections,setSelections]=useState({});
+const [catFilter,setCatFilter]=useState('all');
+const catToInt={Sports:'sports',Art:'art',Tech:'tech',STEM:'stem',Performing:'performing',Film:'film',Cooking:'cooking'};
+
+// Get all eligible activities for a child in a given week
+const getEligible=(weekNum,childIdx)=>{
+const child=children[childIdx];
+const age=calcAge(child.dob,'2026-06-15');
+const bday=new Date(child.dob+'T00:00:00');
+const wk=WEEKS.find(w=>w.num===weekNum);
+// Birthday-aware: if birthday falls before this week's start, use new age
+const weekStart=new Date('2026-06-'+(15+(weekNum-1)*7));
+const campAge=(bday<=weekStart)?calcAge(child.dob,weekStart.toISOString().split('T')[0]):age;
+const interests=(preferences.childInterests||{})[childIdx]||[];
+const isShort=wk&&!wk.full;
+const res=[];
+
+// Traditional camps
+CAMP_DATA.traditionalCamps.forEach(c=>{
+const wEntry=c.weeks.find(w=>w.w===weekNum);
+if(!wEntry||!isEligible(campAge,c))return;
+const price=isShort?(c.shortWeekR||c.priceR):c.priceR;
+const ft=c.fieldTrips?c.fieldTrips[weekNum-1]:null;
+const sp=c.sports?c.sports[weekNum-1]:null;
+let desc=c.type==='full-day'?'Full-day camp':'Half-day camp';
+if(sp)desc+=' | Sports: '+sp.join(', ');
+if(ft)desc+=' | Field trip: '+ft;
+res.push({id:wEntry.id,name:c.name+' ('+c.ageLabel+')',time:c.time,location:c.location,price,priceLabel:'$'+price+'(R)',cat:'Traditional',type:c.type,desc,interestMatch:false,_fullLoc:c.location});
+});
+
+// Enrichment camps
+CAMP_DATA.enrichmentCamps.forEach(c=>{
+const cw=c.multiWeek?c.multiWeek.find(x=>x.w===weekNum):null;
+if(!cw&&c.week!==weekNum)return;
+if(!isEligible(campAge,c))return;
+const rid=cw?cw.id:c.id;
+const intKey=catToInt[c.cat]||'';
+const matched=!!(intKey&&interests.includes(intKey))||(interests.includes('entrepreneurship')&&c.cat==='Tech');
+res.push({id:rid,name:c.name,time:c.time,location:c.location,price:c.priceR,priceLabel:'$'+c.priceR+'(R)',cat:c.cat,type:'enrichment',desc:c.desc||'',interestMatch:matched,_fullLoc:c.location});
+});
+
+// Swim lessons
+Object.entries(CAMP_DATA.swimLessons).forEach(function(entry){
+const key=entry[0],level=entry[1];
+['monteVista','sanRamon'].forEach(pool=>{
+if(!level[pool])return;
+level[pool].forEach(slot=>{
+if(!slot.ids||!slot.ids[weekNum-1]||!isEligible(campAge,level))return;
+const matched=interests.includes('swimming');
+const poolName=pool==='monteVista'?'Monte Vista HS Pool':'San Ramon Olympic Pool';
+res.push({id:slot.ids[weekNum-1],name:level.name+' @ '+(pool==='monteVista'?'Monte Vista':'San Ramon'),time:slot.time+' ('+level.duration+')',location:poolName,price:level.priceR,priceLabel:'$'+level.priceR+'(R)',cat:'Swimming',type:'swim',desc:level.desc||'',interestMatch:matched,_fullLoc:poolName});
+});
+});
+});
+
+// Sort: interest matches first, then by category, then by start time
+res.sort((a,b)=>{
+if(a.interestMatch!==b.interestMatch)return a.interestMatch?-1:1;
+if(a.cat!==b.cat)return a.cat.localeCompare(b.cat);
+return(parseTime(a.time.split('-')[0])||0)-(parseTime(b.time.split('-')[0])||0);
+});
+return res;
+};
+
+const toggleAct=(act)=>{
+setSelections(prev=>{
+const next=JSON.parse(JSON.stringify(prev));
+const childName=children[activeChild].name;
+if(!next[activeWeek])next[activeWeek]={};
+if(!next[activeWeek][childName])next[activeWeek][childName]=[];
+const idx=next[activeWeek][childName].findIndex(a=>a.id===act.id);
+if(idx>=0)next[activeWeek][childName].splice(idx,1);
+else next[activeWeek][childName].push(act);
+return next;
+});
+};
+
+const isSel=(actId)=>{
+const childName=children[activeChild].name;
+return(selections[activeWeek]&&selections[activeWeek][childName]||[]).some(a=>a.id===actId);
+};
+
+// Compute warnings for a given week
+const getWeekWarnings=(weekNum)=>{
+const warns=[];
+const weekSel=selections[weekNum]||{};
+// Time overlaps within each child
+children.forEach(child=>{
+const acts=weekSel[child.name]||[];
+for(let i=0;i<acts.length;i++){
+for(let j=i+1;j<acts.length;j++){
+if(timesOverlap(acts[i].time,acts[j].time)){
+warns.push({type:'red',icon:'\u26A0\uFE0F',text:child.name+': "'+acts[i].name+'" and "'+acts[j].name+'" have overlapping times!'});
+}}}
+});
+// Sibling distance
+if(children.length>1&&preferences.sameCamp!==false){
+for(let i=0;i<children.length;i++){
+for(let j=i+1;j<children.length;j++){
+const actsI=weekSel[children[i].name]||[];
+const actsJ=weekSel[children[j].name]||[];
+actsI.forEach(ai=>{
+actsJ.forEach(aj=>{
+if(timesOverlap(ai.time,aj.time)){
+const zI=getZone(ai._fullLoc||ai.location);
+const zJ=getZone(aj._fullLoc||aj.location);
+if(zI!=='unknown'&&zJ!=='unknown'&&zI!==zJ){
+warns.push({type:'orange',icon:'\uD83D\uDCCD',text:children[i].name+' at '+(ai.location||'').split(',')[0]+' and '+children[j].name+' at '+(aj.location||'').split(',')[0]+' are in different areas during overlapping times.'});
+}}});
+});
+}}
+}
+// Coverage gap
+if(preferences.coverage==='full'){
+children.forEach(child=>{
+const acts=weekSel[child.name]||[];
+if(acts.length===0)return;
+const ranges=acts.map(a=>getTimeRange(a.time)).filter(Boolean).sort((a,b)=>a.start-b.start);
+if(ranges.length===0)return;
+const lastEnd=ranges[ranges.length-1].end;
+if(lastEnd<900){
+const h=Math.floor(lastEnd/60),m=lastEnd%60,ampm=h>=12?'PM':'AM',h12=h>12?h-12:h;
+warns.push({type:'blue',icon:'\u2139\uFE0F',text:child.name+': Last activity ends at '+h12+':'+String(m).padStart(2,'0')+' '+ampm+'. Consider adding afternoon coverage.'});
+}});
+}
+return warns;
+};
+
+// Global stats
+let totalClasses=0,totalCost=0,totalWarnings=0;
+weeks.forEach(w=>{
+const ws=selections[w]||{};
+children.forEach(c=>{
+const acts=ws[c.name]||[];
+totalClasses+=acts.length;
+acts.forEach(a=>{totalCost+=a.price;});
+});
+totalWarnings+=getWeekWarnings(w).length;
+});
+
+const eligible=getEligible(activeWeek,activeChild);
+const catList=['all',...[...new Set(eligible.map(a=>a.cat))]];
+const filtered=catFilter==='all'?eligible:eligible.filter(a=>a.cat===catFilter);
+const currentWarnings=getWeekWarnings(activeWeek);
+const selectedForChild=(selections[activeWeek]&&selections[activeWeek][children[activeChild].name])||[];
+
+const buildPlan=()=>{
+const weekResults=weeks.map(wNum=>{
+const wk=WEEKS.find(w=>w.num===wNum);
+const activities=[];
+children.forEach(child=>{
+const childActs=(selections[wNum]&&selections[wNum][child.name])||[];
+childActs.forEach(act=>{
+activities.push({child:child.name,name:act.name,classId:act.id,time:act.time,location:(act.location||'').split(',')[0],price:act.priceLabel,notes:act.desc?act.desc.substring(0,90):'',_cat:act.cat});
+});
+});
+return{week:wNum,weekLabel:wk.label+': '+wk.dates+(!wk.full?' (short week)':''),activities};
+});
+let cost=0;
+weekResults.forEach(w=>w.activities.forEach(a=>{const m=(a.price||'').match(/\$(\d+)/);if(m)cost+=parseInt(m[1]);}));
+const highlights=['You hand-picked every class in this plan!'];
+if(totalWarnings>0)highlights.push('\u26A0\uFE0F '+totalWarnings+' warning(s) detected \u2014 review flagged weeks');
+highlights.push('Register at danville.ca.gov/recguide (Residents: Feb 10 / Open: Feb 17)');
+onFinish({summary:'Your hand-built summer plan for '+children.map(c=>c.name).join(' & ')+'.',scenarios:[{name:'Your Custom Plan',description:'Hand-picked classes for each child across '+weeks.length+' weeks of summer 2026.',estimatedCost:'~$'+cost.toLocaleString()+' total (resident pricing)',weeks:weekResults,highlights}]});
+};
+
+return(<div className="fade-in max-w-5xl mx-auto">
+<div className="text-center mb-6">
+<h2 className="text-2xl font-black mb-2" style={{color:'var(--text-primary)',letterSpacing:'-.02em'}}>{"\uD83D\uDEE0\uFE0F"} Build Your Own Plan</h2>
+<p style={{color:'var(--text-muted)',fontSize:14}}>Pick classes week by week for each child. Interest matches are highlighted with {"\u2B50"}.</p>
+</div>
+
+<div className="build-summary flex items-center justify-between flex-wrap gap-3">
+<div className="flex items-center gap-4">
+<div style={{display:'flex',alignItems:'center',gap:8}}>
+<span style={{fontSize:24,fontWeight:900,color:'var(--primary)'}}>{totalClasses}</span>
+<span className="text-sm font-semibold" style={{color:'var(--text-secondary)'}}>class{totalClasses!==1?'es':''} selected</span>
+</div>
+<span style={{width:1,height:20,background:'var(--border)'}}></span>
+<span className="text-sm font-bold" style={{color:'var(--text-secondary)'}}>~${totalCost.toLocaleString()}</span>
+</div>
+<div className="flex items-center gap-3">
+{totalWarnings>0&&<span className="text-sm font-bold" style={{color:'#ef4444'}}>{"\u26A0\uFE0F"} {totalWarnings} warning{totalWarnings!==1?'s':''}</span>}
+<button onClick={buildPlan} disabled={totalClasses===0} className={`btn-primary text-sm ${totalClasses===0?'opacity-50 cursor-not-allowed':''}`} style={{padding:'10px 24px'}}>View Plan {"\u2192"}</button>
+</div>
+</div>
+
+<div className="flex overflow-x-auto gap-1 mb-4 pb-0" style={{borderBottom:'2px solid var(--border)'}}>
+{weeks.map(w=>{
+const count=children.reduce((sum,c)=>((selections[w]&&selections[w][c.name])||[]).length+sum,0);
+const hasWarn=getWeekWarnings(w).length>0;
+return(<div key={w} onClick={()=>{setActiveWeek(w);setCatFilter('all');}} className={`build-week-tab ${activeWeek===w?'active':''}`}>
+{WEEKS.find(wk=>wk.num===w).label}{hasWarn&&<span style={{color:'#dc2626',marginLeft:4}}>{"\u26A0"}</span>}
+<span className="wcount">{count}</span>
+</div>);
+})}
+</div>
+
+<div className="flex gap-3 mb-5">
+{children.map((c,i)=>{
+const count=((selections[activeWeek]&&selections[activeWeek][c.name])||[]).length;
+return(<div key={i} onClick={()=>{setActiveChild(i);setCatFilter('all');}} className={`build-child-tab ${activeChild===i?'sel-'+i:''}`}>
+{c.name} {count>0&&<span className="text-xs font-bold">({count})</span>}
+</div>);
+})}
+</div>
+
+{currentWarnings.length>0&&<div className="build-warn-panel">
+<div className="font-bold text-sm mb-2" style={{color:'#92400e'}}>{"\u26A0\uFE0F"} Issues for {WEEKS.find(w=>w.num===activeWeek).label}</div>
+{currentWarnings.map((w,i)=>(<div key={i} className="text-sm mt-1"><span className={`warn-badge warn-${w.type}`}>{w.icon} {w.text}</span></div>))}
+</div>}
+
+{selectedForChild.length>0&&<div className="build-sel-strip">
+<div className="text-xs font-bold mb-2" style={{color:'var(--primary-dark)'}}>{"\u2713"} Selected for {children[activeChild].name} &mdash; {WEEKS.find(w=>w.num===activeWeek).label} <span style={{color:'var(--text-muted)',fontWeight:400}}>(click to remove)</span></div>
+<div className="flex flex-wrap gap-2">
+{selectedForChild.map(act=>(<div key={act.id} onClick={()=>toggleAct(act)} className="build-sel-chip">
+{act.name} <span style={{color:'var(--text-muted)'}}>{"\u00D7"}</span>
+</div>))}
+</div>
+</div>}
+
+<div className="flex flex-wrap gap-2 mb-5">
+{catList.map(cat=>(<button key={cat} onClick={()=>setCatFilter(cat)} className={`pill-filter ${catFilter===cat?'active':''}`}>{cat==='all'?'All ('+eligible.length+')':cat+' ('+eligible.filter(a=>a.cat===cat).length+')'}</button>))}
+</div>
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+{filtered.map((act,idx)=>{
+const sel=isSel(act.id);
+const conflicts=selectedForChild.filter(s=>s.id!==act.id&&timesOverlap(s.time,act.time));
+return(<div key={act.id} onClick={()=>toggleAct(act)} className={`build-card ${sel?'selected':''}`} style={{animation:`slideIn .2s ease ${idx*0.02}s both`}}>
+<div className="flex justify-between items-start mb-2">
+<div className="flex-1 pr-8">
+<span className="font-bold text-sm" style={{color:'var(--text-primary)'}}>{act.name}</span>
+{act.interestMatch&&<span className="int-badge ml-2">{"\u2B50"} Match</span>}
+</div>
+<span className="text-xs font-bold px-3 py-1 rounded-lg" style={{color:'var(--primary-dark)',background:'var(--primary-50)',border:'1px solid var(--primary-200)',whiteSpace:'nowrap'}}>{act.priceLabel}</span>
+</div>
+<div className="text-xs mt-1" style={{color:'var(--text-secondary)'}}>{act.time} {"\u2022"} {(act.location||'').split(',')[0]}</div>
+{act.desc&&<div className="text-xs mt-1" style={{color:'var(--text-muted)'}}>{act.desc.substring(0,120)}</div>}
+<div className="flex items-center gap-2 mt-3">
+<span className="cat-pill">{act.cat}</span>
+{act.type==='full-day'&&<span className="cat-pill">Full Day</span>}
+{act.type==='half-day'&&<span className="cat-pill">Half Day</span>}
+{sel&&<span style={{fontSize:10,fontWeight:800,color:'var(--primary)',letterSpacing:'.03em'}}>{"\u2713"} SELECTED</span>}
+{!sel&&conflicts.length>0&&<span className="warn-badge warn-orange" style={{margin:0}}>{"\u26A0\uFE0F"} Overlaps with {conflicts[0].name}</span>}
+</div>
+</div>);
+})}
+</div>
+{filtered.length===0&&<div className="text-center py-12" style={{color:'var(--text-muted)'}}>No eligible activities match this filter for {children[activeChild].name} in this week.</div>}
+
+<div className="flex gap-3 mt-6">
+<button onClick={onBack} className="btn-secondary flex-1">{"\u2190"} Back to Preferences</button>
+<button onClick={buildPlan} disabled={totalClasses===0} className={`btn-primary flex-1 ${totalClasses===0?'opacity-50 cursor-not-allowed':''}`}>View Plan ({totalClasses} classes) {"\u2192"}</button>
+</div>
+</div>);
+}
+
+// ============================================================
+// MAIN APP
+// ============================================================
+function App(){
+const [step,setStep]=useState(0);
+const [apiKey,setApiKey]=useState('');
+const [mode,setMode]=useState('rules');
+const [children,setChildren]=useState([{name:'',dob:'',gender:''}]);
+const [preferences,setPreferences]=useState({budget:'all-out',coverage:'full',weeks:[1,2,3,4,5,6,7],sameCamp:true,childInterests:{},notes:''});
+const [results,setResults]=useState(null);
+const [loading,setLoading]=useState(false);
+const [loadMsgs,setLoadMsgs]=useState([]);
+const [error,setError]=useState('');
+
+const steps=['Welcome','Children','Preferences','Generate','Results'];
+
+const generatePlan=async()=>{
+setStep(3);setLoading(true);setError('');
+const modeLabel=mode==='rules'?'rule engine':'AI';
+setLoadMsgs([`Analyzing your family preferences (${modeLabel})...`]);
+
+// RULE-BASED MODE
+if(mode==='rules'){
+setTimeout(()=>setLoadMsgs(m=>[...m,'Filtering camps by age eligibility...']),400);
+setTimeout(()=>setLoadMsgs(m=>[...m,'Matching interests and checking schedule conflicts...']),800);
+setTimeout(()=>setLoadMsgs(m=>[...m,'Building weekly scenarios...']),1200);
+setTimeout(()=>{
+try{
+const plan=generateRuleBasedPlan(children,preferences);
+setResults(plan);setStep(4);
+}catch(e){setError('Rule engine error: '+e.message);setStep(2);}
+finally{setLoading(false);}
+},1600);
+return;
+}
+
+// AI MODE (existing code follows)
+
+const childrenInfo=children.map((c,i)=>{
+const ageJun15=calcAge(c.dob,'2026-06-15');
+const ageJul31=calcAge(c.dob,'2026-07-31');
+const bday=new Date(c.dob+'T00:00:00');
+const bdayDuringCamp=bday.getMonth()>=5&&bday.getDate()>=15&&bday.getMonth()<=6;
+return{name:c.name,dob:c.dob,gender:c.gender,ageAtStart:ageJun15,ageAtEnd:ageJul31,hasBirthdayDuringCamp:bdayDuringCamp,interests:(preferences.childInterests||{})[i]||[]};
+});
+
+setTimeout(()=>setLoadMsgs(m=>[...m,'Checking age eligibility for '+CAMP_DATA.enrichmentCamps.length+'+ camps...']),1500);
+setTimeout(()=>setLoadMsgs(m=>[...m,'Building weekly schedules with no time conflicts...']),3000);
+setTimeout(()=>setLoadMsgs(m=>[...m,'Optimizing for location proximity and interests...']),4500);
+
+const systemPrompt=`You are a summer camp planning assistant for the Town of Danville, CA. You have access to the complete Summer 2026 Activity Guide data.
+
+CRITICAL RULES:
+1. ONLY recommend camps where the child's age falls within the camp's age range. Check ages carefully - children may have birthdays during camp season.
+2. Never schedule two camps at overlapping times for the same child.
+3. When families want siblings at the same location, prioritize camps at the same facility.
+4. Include the exact class ID (e.g. #38709) for every recommendation.
+5. Week 3 (Jun 29-Jul 2) is a SHORT WEEK (M-Th only) - use short week pricing.
+6. Camp season: June 15 - July 31 (closed Friday July 3).
+
+CAMP DATA (JSON):
+${JSON.stringify(CAMP_DATA,null,0)}
+
+SUMMER WEEKS:
+${JSON.stringify(WEEKS)}
+
+Respond with VALID JSON only (no markdown, no code fences). Use this exact structure:
+{
+  "summary": "Brief 1-2 sentence overview of the plans",
+  "scenarios": [
+    {
+      "name": "Scenario name (e.g. 'Sports Focus')",
+      "description": "1-2 sentence description of this scenario's philosophy",
+      "estimatedCost": "Estimated total cost for all children (resident pricing)",
+      "weeks": [
+        {
+          "week": 1,
+          "weekLabel": "Week 1: Jun 15-19",
+          "activities": [
+            {
+              "child": "Child name or 'Both'",
+              "name": "Camp/class name",
+              "classId": "#12345",
+              "time": "9:00 AM-3:30 PM",
+              "location": "Location name",
+              "price": "$250(R)",
+              "notes": "Optional notes like field trip info"
+            }
+          ]
+        }
+      ],
+      "highlights": ["Highlight 1", "Highlight 2"]
+    }
+  ]
+}
+
+Create 2-3 scenarios. Each scenario should cover all requested weeks and both/all children. Be specific with class IDs and prices.`;
+
+const userMsg=`Please create a personalized summer camp plan for our family:
+
+CHILDREN:
+${childrenInfo.map(c=>`- ${c.name}: Born ${c.dob}, Age ${c.ageAtStart} at camp start${c.hasBirthdayDuringCamp?' (has birthday during camp!)':''}. Interests: ${c.interests.join(', ')}`).join('\n')}
+
+PREFERENCES:
+- Budget: ${preferences.budget}
+- Daily coverage: ${preferences.coverage}
+- Weeks needed: ${(preferences.weeks||[1,2,3,4,5,6,7]).join(', ')}
+- Keep siblings together: ${preferences.sameCamp!==false?'Yes':'No preference'}
+${preferences.notes?`- Additional notes: ${preferences.notes}`:''}
+
+Please generate 2-3 different scenario options with weekly breakdowns. Include class IDs for every activity.`;
+
+try{
+const resp=await fetch('https://api.anthropic.com/v1/messages',{
+method:'POST',
+headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+body:JSON.stringify({model:'claude-sonnet-4-5-20250929',max_tokens:8000,system:systemPrompt,messages:[{role:'user',content:userMsg}]})
+});
+if(!resp.ok){const e=await resp.text();throw new Error(`API error ${resp.status}: ${e}`);}
+const data=await resp.json();
+const text=data.content[0].text;
+
+let parsed;
+try{
+// Try to extract JSON from the response
+const jsonMatch=text.match(/\{[\s\S]*\}/);
+parsed=JSON.parse(jsonMatch?jsonMatch[0]:text);
+}catch(e){
+// If JSON parsing fails, create a simple display
+parsed={summary:"Generated plan (formatting issue - showing raw response)",scenarios:[{name:"Generated Plan",description:text.substring(0,500),weeks:[],highlights:[]}]};
+}
+
+setResults(parsed);
+setStep(4);
+}catch(e){
+setError(e.message);
+setStep(2);
+}finally{
+setLoading(false);
+}
+};
+
+return(<div className="min-h-screen py-10 px-4" style={{paddingBottom:40}}>
+<div className="max-w-5xl mx-auto">
+{step>0&&step<4&&<StepIndicator current={step} steps={mode==='build'?['Children','Interests','Build']:['Children','Interests','Generate']}/>}
+{error&&<div className="max-w-2xl mx-auto mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+<strong>Error:</strong> {error} <button onClick={()=>setError('')} className="ml-2 underline">Dismiss</button></div>}
+{step===0&&<WelcomeStep apiKey={apiKey} setApiKey={setApiKey} mode={mode} setMode={setMode} onNext={()=>setStep(1)}/>}
+{step===1&&<ChildrenStep children={children} setChildren={setChildren} onNext={()=>setStep(2)} onBack={()=>setStep(0)}/>}
+{step===2&&<PreferencesStep children={children} preferences={preferences} setPreferences={setPreferences} onNext={mode==='build'?()=>setStep(3):generatePlan} onBack={()=>setStep(1)}/>}
+{step===3&&mode==='build'&&<BuildYourOwnStep children={children} preferences={preferences} onBack={()=>setStep(2)} onFinish={(plan)=>{setResults(plan);setStep(4);}}/>}
+{step===3&&mode!=='build'&&<LoadingStep messages={loadMsgs} mode={mode}/>}
+{step===4&&<ResultsStep results={results} children={children} preferences={preferences} onBack={()=>{setStep(2);setResults(null);}} onRegenerate={generatePlan}/>}
+</div>
+</div>);
+}
+
+ReactDOM.render(<App/>,document.getElementById('root'));
+</script>
+</body>
+</html>
